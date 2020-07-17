@@ -1,5 +1,4 @@
-﻿using app.NewFolder;
-using app.Operations;
+﻿using app.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +9,32 @@ namespace app.Parser
     {
         public Dictionary<string, IToken> Variables = new Dictionary<string, IToken>();
 
-        public void Eval(string message)
+        public string Eval(string message)
         {
+            string result = "";
             foreach (var line in message.Split(
                 new[] { "\r\n", "\r", "\n" },
                 StringSplitOptions.None
             ))
             {
-                EvalLine(line.Split(" "));
+                result = EvalLine(line.Split(" "));
             }
+
+            return result;
         }
 
         public string EvalLine(string[] ops)
         {
             if (ops[0].StartsWith(":")) // variable assignment
             {
-                //        Variables[ops[0]] = EvalOpCode(ops.Slice(2));
+                (Variables[ops[0]], _) = EvalOpCode(ops.Skip(2).ToArray());
+                return Variables[ops[0]].ToString();
             }
             else
             {
                 var (value, _) = EvalOpCode(ops);
                 return value.ToString();
             }
-
-            throw new NotImplementedException();
         }
 
         public (IToken value, string[] remaining) EvalOpCode(string[] ops)
@@ -57,7 +58,7 @@ namespace app.Parser
                     return (new DecOperator(), remaining);
 
                 case "neg":
-                    return (new DecOperator(), remaining);
+                    return (new NegOperator(), remaining);
 
                 case "add":
                     return (new AddOperator(), remaining);
@@ -68,20 +69,61 @@ namespace app.Parser
                 case "div":
                     return (new DivOperator(), remaining);
 
+                case "pwr2":
+                    return (new Pwr2Operator(), remaining);
+
                 case "t":
-                    return (new TrueValue(), remaining);
+                    return (new KComb(), remaining);
 
                 case "f":
-                    return (new FalseValue(), remaining);
+                    return (new FComb(), remaining);
 
                 case "s":
                     return (new SComb(), remaining);
 
+                case "c":
+                    return (new CComb(), remaining);
+
+                case "b":
+                    return (new BComb(), remaining);
+
+                case "i":
+                    return (new IComb(), remaining);
+
+                case "cons":
+                    return (new ConsOperator(), remaining);
+
+                case "car":
+                    return (new CarOperator(), remaining);
+
+                case "cdr":
+                    return (new CdrOperator(), remaining);
+
+                case "nil":
+                    return (new NilOperator(), remaining);
+
+                case "isnil":
+                    return (new IsNilOperator(), remaining);
+
+                case "eq":
+                    return (new EqOperator(), remaining);
+
                 default:
-                    if (int.TryParse(ops[0], out var constant))
+                    if (decimal.TryParse(ops[0], out var constant)) // int constant
                     {
-                        return (new Constant(int.Parse(ops[0])), ops.Skip(1).ToArray());
+                        return (new Constant(decimal.Parse(op)), remaining);
                     }
+
+                    if (op.StartsWith(":")) // variable reference
+                    {
+                        if (Variables.ContainsKey(op))
+                            return (Variables[op], remaining);
+                        else
+                        {
+                            return (new LateBoundToken(op), remaining);
+                        }
+                    }
+
                     throw new InvalidOperationException();
             }
         }

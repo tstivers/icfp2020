@@ -1,15 +1,13 @@
-﻿using app.NewFolder;
-
-namespace app.Operations
+﻿namespace app.Operations
 {
     public class Constant : IToken
     {
-        public Constant(int value)
+        public Constant(decimal value)
         {
             Value = value;
         }
 
-        public int Value { get; }
+        public decimal Value { get; }
 
         public override string ToString()
         {

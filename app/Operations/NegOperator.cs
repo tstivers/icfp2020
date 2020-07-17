@@ -1,6 +1,4 @@
-﻿using app.NewFolder;
-
-namespace app.Operations
+﻿namespace app.Operations
 {
     public class NegOperator : IApplyable
     {

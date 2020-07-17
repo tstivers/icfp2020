@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class FalseValue : IToken
+    public interface IToken
     {
     }
 }
