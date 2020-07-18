@@ -12,6 +12,7 @@ namespace app
         {
             var serverUrl = args[0];
             var playerKey = args[1];
+
             Console.WriteLine($"ServerUrl: {serverUrl}; PlayerKey: {playerKey}");
 
             if (!Uri.TryCreate(serverUrl, UriKind.Absolute, out var serverUri))
