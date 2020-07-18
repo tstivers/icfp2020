@@ -22,5 +22,10 @@
             else
                 return new FComb();
         }
+
+        public override string ToString()
+        {
+            return $"lt [{Value}]";
+        }
     }
 }

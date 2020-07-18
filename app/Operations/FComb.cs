@@ -12,6 +12,8 @@
             Value = value;
         }
 
+        public bool SkipLeft => true;
+
         public IToken Apply(IToken arg)
         {
             if (Value == null)

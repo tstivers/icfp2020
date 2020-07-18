@@ -7,6 +7,8 @@
         public KComb()
         { }
 
+        public bool SkipRight => Value != null;
+
         private KComb(IToken value)
         {
             Value = value;
@@ -22,7 +24,7 @@
 
         public override string ToString()
         {
-            return "t";
+            return $"t [{Value}]";
         }
     }
 }

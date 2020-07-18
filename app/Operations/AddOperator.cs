@@ -22,7 +22,7 @@
 
         public override string ToString()
         {
-            return $"add {Value1}";
+            return $"add [{Value1}]";
         }
     }
 }

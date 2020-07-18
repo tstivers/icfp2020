@@ -27,7 +27,7 @@
             if (Value2 == null)
                 return new ConsOperator(Value1, arg);
 
-            var arg1 = (arg as IApplyable).Apply(Value1) as IApplyable;
+            var arg1 = arg.Apply(Value1) as IApplyable;
 
             return arg1.Apply(Value2);
         }

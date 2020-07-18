@@ -2,23 +2,21 @@
 {
     public class ApOperator : IToken
     {
-        private readonly IToken _arg;
-        private readonly IToken _func;
+        public IToken f { get; set; }
+        public IToken x { get; set; }
 
-        public ApOperator(IToken func, IToken arg)
+        public ApOperator(IToken ff, IToken fx)
         {
-            _func = func;
-            _arg = arg;
+            f = ff;
+            x = fx;
         }
 
-        public IToken Resolve()
-        {
-            return ((IApplyable)_func.Resolve()).Apply(_arg.Resolve());
-        }
+        public ApOperator()
+        { }
 
         public override string ToString()
         {
-            return $"ap {_func} {_arg}";
+            return $"ap [{f}] [{x}]";
         }
     }
 }

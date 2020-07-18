@@ -2,40 +2,37 @@
 {
     public class SComb : IApplyable
     {
-        public IApplyable Value1 { get; }
-        public IApplyable Value2 { get; }
+        public IApplyable x0 { get; }
+        public IApplyable x1 { get; }
 
         public SComb()
         { }
 
         private SComb(IToken value1)
         {
-            Value1 = (IApplyable)value1;
+            x0 = (IApplyable)value1;
         }
 
         private SComb(IToken value1, IToken value2)
         {
-            Value1 = (IApplyable)value1;
-            Value2 = (IApplyable)value2;
+            x0 = (IApplyable)value1;
+            x1 = (IApplyable)value2;
         }
 
-        public IToken Apply(IToken arg)
+        public IToken Apply(IToken x2)
         {
-            if (Value1 == null)
-                return new SComb(arg);
+            if (x0 == null)
+                return new SComb(x2);
 
-            if (Value2 == null)
-                return new SComb(Value1, arg);
+            if (x1 == null)
+                return new SComb(x0, x2);
 
-            var arg1 = Value1.Apply(arg);
-            var arg2 = Value2.Apply(arg);
-
-            return (arg1 as IApplyable).Apply(arg2);
+            return new ApOperator(new ApOperator(x0, x2), new ApOperator(x1, x2));
         }
 
         public override string ToString()
         {
-            return $"s [{Value1}] [{Value2}]";
+            return $"s [{x0}] [{x1}]";
         }
     }
 }

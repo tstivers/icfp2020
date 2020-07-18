@@ -4,18 +4,23 @@ namespace app.Operations
 {
     public class LateBoundToken : IToken
     {
-        private string _id;
-        private Dictionary<string, IToken> _variables;
+        public string Id;
+        public Dictionary<string, IToken> Variables;
 
         public LateBoundToken(string id, Dictionary<string, IToken> variables)
         {
-            _id = id;
-            _variables = variables;
+            Id = id;
+            Variables = variables;
         }
 
-        public IToken Resolve()
+        public override string ToString()
         {
-            return _variables[_id];
+            return $"{Id}";
+        }
+
+        public IToken Reduce()
+        {
+            return Variables[Id].Reduce();
         }
     }
 }

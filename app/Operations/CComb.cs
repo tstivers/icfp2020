@@ -2,38 +2,37 @@
 {
     public class CComb : IApplyable
     {
-        public IToken Value1 { get; }
-        public IToken Value2 { get; }
+        public IToken x0 { get; }
+        public IToken x1 { get; }
 
         public CComb()
         { }
 
-        private CComb(IToken value1)
+        private CComb(IToken arg)
         {
-            Value1 = value1;
+            x0 = arg;
         }
 
-        private CComb(IToken value1, IToken value2)
+        private CComb(IToken arg1, IToken arg2)
         {
-            Value1 = value1;
-            Value2 = value2;
+            x0 = arg1;
+            x1 = arg2;
         }
 
-        public IToken Apply(IToken arg)
+        public IToken Apply(IToken x2)
         {
-            if (Value1 == null)
-                return new CComb(arg);
+            if (x0 == null)
+                return new CComb(x2);
 
-            if (Value2 == null)
-                return new CComb(Value1, arg);
+            if (x1 == null)
+                return new CComb(x0, x2);
 
-            var arg1 = ((IApplyable)Value1.Resolve()).Apply(arg.Resolve()).Resolve() as IApplyable;
-            return arg1.Apply(Value2.Resolve()).Resolve();
+            return new ApOperator(new ApOperator(x0, x2), x1);
         }
 
         public override string ToString()
         {
-            return $"c [{Value1?.Resolve()}] [{Value2?.Resolve()}]".TrimEnd();
+            return $"c [{x0}] [{x1}]";
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿namespace app.Operations
 {
-    public class MulOperator : IApplyable
+    public class LOperator : IToken
     {
         public IToken Value { get; }
 
-        public MulOperator()
+        public LOperator()
         { }
 
-        private MulOperator(IToken value)
+        private LOperator(IToken value)
         {
             Value = value;
         }
@@ -15,14 +15,14 @@
         public IToken Apply(IToken arg)
         {
             if (Value == null)
-                return new MulOperator(arg);
+                return new LOperator(arg);
 
-            return new Constant((Value as Constant).Value * (arg as Constant).Value);
+            return arg;
         }
 
         public override string ToString()
         {
-            return $"mul [{Value}]";
+            return $"l [{Value}]";
         }
     }
 }

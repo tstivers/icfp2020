@@ -2,38 +2,37 @@
 {
     public class BComb : IApplyable
     {
-        public IToken Value1 { get; }
-        public IToken Value2 { get; }
+        public IToken x0 { get; }
+        public IToken x1 { get; }
 
         public BComb()
         { }
 
         private BComb(IToken value1)
         {
-            Value1 = (IApplyable)value1;
+            x0 = value1;
         }
 
         private BComb(IToken value1, IToken value2)
         {
-            Value1 = value1;
-            Value2 = value2;
+            x0 = value1;
+            x1 = value2;
         }
 
-        public IToken Apply(IToken arg)
+        public IToken Apply(IToken x2)
         {
-            if (Value1 == null)
-                return new BComb(arg);
+            if (x0 == null)
+                return new BComb(x2);
 
-            if (Value2 == null)
-                return new BComb(Value1, arg);
+            if (x1 == null)
+                return new BComb(x0, x2);
 
-            var arg1 = ((IApplyable)Value2.Resolve()).Apply(arg.Resolve()).Resolve();
-            return ((IApplyable)Value1.Resolve()).Apply(arg1.Resolve()).Resolve();
+            return new ApOperator(x0, new ApOperator(x1, x2));
         }
 
         public override string ToString()
         {
-            return $"b [{Value1?.Resolve()}] [{Value2?.Resolve()}]".TrimEnd();
+            return $"b [{x0}] [{x1}]";
         }
     }
 }

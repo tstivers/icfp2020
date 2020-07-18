@@ -33,7 +33,7 @@ namespace app
 
             //return 0;
 
-            var x = new Thread(Parse, 1024 * 1024 * 512);
+            var x = new Thread(Parse, 1024 * 1024 * 1024);
             x.Start();
             while (x.IsAlive) ;
 
