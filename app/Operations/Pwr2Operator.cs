@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class Pwr2Operator : IApplyable
+    public class Pwr2Operator : IToken
     {
         public IToken Apply(IToken arg)
         {

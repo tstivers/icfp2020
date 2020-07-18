@@ -1,4 +1,5 @@
-﻿using System;
+﻿using app.Operations;
+using System;
 
 namespace app.Encoder
 {
@@ -55,6 +56,16 @@ namespace app.Encoder
             var num = Convert.ToInt32(bits.Substring(width + 1, length), 2);
 
             return (num, bits.Substring(width + length + 1));
+        }
+
+        public static IToken Mod(IToken token)
+        {
+            return token;
+        }
+
+        public static IToken Demod(IToken token)
+        {
+            return token;
         }
     }
 }

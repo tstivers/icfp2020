@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class AddOperator : IApplyable
+    public class AddOperator : IToken
     {
         public IToken Value1 { get; }
 

@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class LtOperator : IApplyable
+    public class LtOperator : IToken
     {
         public IToken Value { get; }
 

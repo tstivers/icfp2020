@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class KComb : IApplyable
+    public class KComb : IToken
     {
         public IToken Value { get; }
 

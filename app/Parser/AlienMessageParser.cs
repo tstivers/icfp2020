@@ -17,7 +17,7 @@ namespace app.Parser
             _lines = message.Split(
                 new[] { "\r\n", "\r", "\n" },
                 StringSplitOptions.None
-            ).Select(x => x.Split(" ")).ToList();
+            ).Select(x => x.Split(" ", StringSplitOptions.RemoveEmptyEntries)).ToList();
         }
 
         public Stack<ApOperator> Stack;
@@ -55,8 +55,8 @@ namespace app.Parser
 
         public static IToken Reduce(IToken token, string name = null)
         {
-            if (name != null)
-                Console.WriteLine($"   Reducing {name}");
+            //if (name != null)
+            //    Console.WriteLine($"   Reducing {name}");
 
             Stack<IToken> stack = new Stack<IToken>();
 
@@ -94,7 +94,7 @@ namespace app.Parser
 
                 if (f.SkipLeft)
                 {
-                    stack.Push(x); // wrong
+                    stack.Push(x); // wrong?
                     continue;
                 }
 
@@ -184,6 +184,7 @@ namespace app.Parser
                         break;
 
                     case "cons":
+                    case "vec":
                         token = new ConsOperator();
                         break;
 
@@ -213,6 +214,18 @@ namespace app.Parser
 
                     case "lt":
                         token = new LtOperator();
+                        break;
+
+                    case "mod":
+                        token = new ModOperator();
+                        break;
+
+                    case "dem":
+                        token = new DemodOperator();
+                        break;
+
+                    case "interact":
+                        token = new InteractOperator();
                         break;
 
                     default:

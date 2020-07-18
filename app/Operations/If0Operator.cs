@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class If0Operator : IApplyable
+    public class If0Operator : IToken
     {
         public IToken Value1 { get; }
         public IToken Value2 { get; }

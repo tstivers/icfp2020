@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class NegOperator : IApplyable
+    public class NegOperator : IToken
     {
         public IToken Apply(IToken arg)
         {

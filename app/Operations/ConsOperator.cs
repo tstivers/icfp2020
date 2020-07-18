@@ -1,6 +1,8 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
-    public class ConsOperator : IApplyable
+    public class ConsOperator : IToken
     {
         public IToken Value1 { get; }
         public IToken Value2 { get; }
@@ -15,8 +17,8 @@
 
         private ConsOperator(IToken value1, IToken value2)
         {
-            Value1 = value1;
-            Value2 = value2;
+            Value1 = AlienMessageParser.Reduce(value1);
+            Value2 = AlienMessageParser.Reduce(value2);
         }
 
         public IToken Apply(IToken arg)

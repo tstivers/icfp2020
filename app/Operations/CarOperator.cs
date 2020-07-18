@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class CarOperator : IApplyable
+    public class CarOperator : IToken
     {
         public IToken Apply(IToken arg)
         {

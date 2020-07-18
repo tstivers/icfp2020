@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class NilOperator : IApplyable
+    public class NilOperator : IToken
     {
         public IToken Apply(IToken arg)
         {

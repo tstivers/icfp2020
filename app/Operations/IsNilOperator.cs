@@ -3,7 +3,7 @@ using System;
 
 namespace app.Operations
 {
-    public class IsNilOperator : IApplyable
+    public class IsNilOperator : IToken
     {
         public IToken Apply(IToken arg)
         {

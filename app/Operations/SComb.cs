@@ -1,8 +1,6 @@
-﻿using app.Parser;
-
-namespace app.Operations
+﻿namespace app.Operations
 {
-    public class SComb : IApplyable
+    public class SComb : IToken
     {
         public IToken x0 { get; }
         public IToken x1 { get; }
@@ -29,11 +27,11 @@ namespace app.Operations
             if (x1 == null)
                 return new SComb(x0, x2);
 
-            var a0 = AlienMessageParser.Reduce(x0);
-            var a1 = AlienMessageParser.Reduce(x1);
-            var a2 = AlienMessageParser.Reduce(x2);
+            //var a0 = AlienMessageParser.Reduce(x0);
+            //var a1 = AlienMessageParser.Reduce(x1);
+            //var a2 = AlienMessageParser.Reduce(x2);
 
-            return new ApOperator(new ApOperator(a0, a2), new ApOperator(a1, a2));
+            return new ApOperator(new ApOperator(x0, x2), new ApOperator(x1, x2));
         }
 
         public override string ToString()

@@ -1,18 +1,20 @@
-﻿using app.Parser;
+﻿using app.Encoder;
+using app.Parser;
 
 namespace app.Operations
 {
-    public class IncOperator : IToken
+    public class ModOperator : IToken
     {
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);
-            return new Constant((x0 as Constant).Value + 1);
+
+            return ModDemod.Mod(x0);
         }
 
         public override string ToString()
         {
-            return $"inc";
+            return $"mod";
         }
     }
 }

@@ -17,10 +17,5 @@ namespace app.Operations
         {
             return $"{Id}";
         }
-
-        public IToken Reduce()
-        {
-            return Variables[Id].Reduce();
-        }
     }
 }

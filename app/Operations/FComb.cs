@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class FComb : IApplyable
+    public class FComb : IToken
     {
         public IToken Value { get; }
 
@@ -24,7 +24,7 @@
 
         public override string ToString()
         {
-            return "f";
+            return $"f [{Value}]";
         }
     }
 }

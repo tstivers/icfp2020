@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class MulOperator : IApplyable
+    public class MulOperator : IToken
     {
         public IToken Value { get; }
 
@@ -22,7 +22,7 @@ namespace app.Operations
             var x0 = AlienMessageParser.Reduce(Value);
             var x1 = AlienMessageParser.Reduce(arg);
 
-            return new Constant((x0 as Constant).Value * (x1 as Constant).Value);
+            return new Constant(decimal.Round((x0 as Constant).Value * (x1 as Constant).Value));
         }
 
         public override string ToString()

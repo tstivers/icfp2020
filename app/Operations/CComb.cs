@@ -1,6 +1,6 @@
 ﻿namespace app.Operations
 {
-    public class CComb : IApplyable
+    public class CComb : IToken
     {
         public IToken x0 { get; }
         public IToken x1 { get; }

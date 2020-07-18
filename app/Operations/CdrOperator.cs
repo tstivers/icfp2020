@@ -2,7 +2,7 @@
 
 namespace app.Operations
 {
-    public class CdrOperator : IApplyable
+    public class CdrOperator : IToken
     {
         public IToken Apply(IToken arg)
         {
