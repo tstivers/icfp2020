@@ -8,5 +8,10 @@ namespace app.Operations
         {
             return new Constant((decimal)Math.Pow(2, (double)(arg as Constant).Value));
         }
+
+        public override string ToString()
+        {
+            return "neg";
+        }
     }
 }

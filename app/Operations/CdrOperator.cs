@@ -1,10 +1,13 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
     public class CdrOperator : IApplyable
     {
         public IToken Apply(IToken arg)
         {
-            return (arg as ConsOperator).Value2;
+            var x0 = AlienMessageParser.Reduce(arg);
+            return (x0 as ConsOperator).Value2;
         }
     }
 }

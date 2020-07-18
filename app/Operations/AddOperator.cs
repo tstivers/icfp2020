@@ -1,4 +1,6 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
     public class AddOperator : IApplyable
     {
@@ -17,7 +19,10 @@
             if (Value1 == null)
                 return new AddOperator(arg);
 
-            return new Constant((Value1.Resolve() as Constant).Value + (arg.Resolve() as Constant).Value);
+            var x0 = AlienMessageParser.Reduce(Value1);
+            var x1 = AlienMessageParser.Reduce(arg);
+
+            return new Constant((x0 as Constant).Value + (x1 as Constant).Value);
         }
 
         public override string ToString()

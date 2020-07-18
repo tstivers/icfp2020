@@ -1,4 +1,6 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
     public class MulOperator : IApplyable
     {
@@ -17,7 +19,10 @@
             if (Value == null)
                 return new MulOperator(arg);
 
-            return new Constant((Value as Constant).Value * (arg as Constant).Value);
+            var x0 = AlienMessageParser.Reduce(Value);
+            var x1 = AlienMessageParser.Reduce(arg);
+
+            return new Constant((x0 as Constant).Value * (x1 as Constant).Value);
         }
 
         public override string ToString()

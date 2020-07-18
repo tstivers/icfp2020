@@ -1,4 +1,5 @@
-﻿using System;
+﻿using app.Parser;
+using System;
 
 namespace app.Operations
 {
@@ -6,9 +7,11 @@ namespace app.Operations
     {
         public IToken Apply(IToken arg)
         {
-            if (arg is NilOperator)
+            var x0 = AlienMessageParser.Reduce(arg);
+
+            if (x0 is NilOperator)
                 return new KComb();
-            else if (arg is ConsOperator)
+            else if (x0 is ConsOperator)
                 return new FComb();
             else
                 throw new InvalidOperationException();

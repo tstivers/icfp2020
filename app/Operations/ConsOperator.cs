@@ -27,9 +27,11 @@
             if (Value2 == null)
                 return new ConsOperator(Value1, arg);
 
-            var arg1 = arg.Apply(Value1) as IApplyable;
+            //var x0 = AlienMessageParser.Reduce(Value1);
+            //var x1 = AlienMessageParser.Reduce(Value2);
+            //var x2 = AlienMessageParser.Reduce(arg);
 
-            return arg1.Apply(Value2);
+            return new ApOperator(new ApOperator(arg, Value1), Value2);
         }
 
         public override string ToString()

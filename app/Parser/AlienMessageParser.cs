@@ -8,7 +8,7 @@ namespace app.Parser
 {
     public class AlienMessageParser
     {
-        public Dictionary<string, IToken> Variables = new Dictionary<string, IToken>();
+        public static Dictionary<string, IToken> Variables = new Dictionary<string, IToken>();
 
         private List<string[]> _lines;
 
@@ -30,15 +30,15 @@ namespace app.Parser
                 ParseLine(line);
             }
 
-            foreach (var key in Variables.Keys.OrderBy(x => x))
-            {
-                //Console.WriteLine($"reducing {key}");
-                //Reduce(Variables[key]);
-            }
+            //foreach (var key in Variables.Keys.OrderBy(x => x))
+            //{
+            //    Console.WriteLine($"reducing {key}");
+            //    Reduce(Variables[key]);
+            //}
 
             var last = ParseTokens(_lines.Last().Skip(2).ToArray());
 
-            var t = Reduce(last, "bleh");
+            var t = Reduce(last, "galaxy");
 
             Console.WriteLine(t);
 
@@ -53,7 +53,7 @@ namespace app.Parser
             }
         }
 
-        public IToken Reduce(IToken token, string name = null)
+        public static IToken Reduce(IToken token, string name = null)
         {
             if (name != null)
                 Console.WriteLine($"   Reducing {name}");
@@ -94,13 +94,8 @@ namespace app.Parser
 
                 if (f.SkipLeft)
                 {
-                    stack.Push(x.Apply(null));
+                    stack.Push(x); // wrong
                     continue;
-                }
-
-                if (x is ApOperator xf)
-                {
-                    x = Reduce(x);
                 }
 
                 while (f is LateBoundToken lb)

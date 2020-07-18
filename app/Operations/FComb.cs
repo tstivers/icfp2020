@@ -12,7 +12,7 @@
             Value = value;
         }
 
-        public bool SkipLeft => true;
+        public bool SkipLeft => Value != null;
 
         public IToken Apply(IToken arg)
         {

@@ -1,10 +1,18 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
     public class NegOperator : IApplyable
     {
         public IToken Apply(IToken arg)
         {
-            return new Constant(-(arg as Constant).Value);
+            var x0 = AlienMessageParser.Reduce(arg);
+            return new Constant(-(x0 as Constant).Value);
+        }
+
+        public override string ToString()
+        {
+            return "neg";
         }
     }
 }

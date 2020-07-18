@@ -1,4 +1,6 @@
-﻿namespace app.Operations
+﻿using app.Parser;
+
+namespace app.Operations
 {
     public class EqOperator : IApplyable
     {
@@ -17,7 +19,10 @@
             if (Value == null)
                 return new EqOperator(arg);
 
-            if ((Value as Constant).Value == (arg as Constant).Value)
+            var x0 = AlienMessageParser.Reduce(Value);
+            var x1 = AlienMessageParser.Reduce(arg);
+
+            if ((x0 as Constant).Value == (x1 as Constant).Value)
                 return new KComb();
             else
                 return new FComb();
