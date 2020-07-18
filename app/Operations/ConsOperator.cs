@@ -31,5 +31,10 @@
 
             return arg1.Apply(Value2);
         }
+
+        public override string ToString()
+        {
+            return $"cons [{Value1}] [{Value2}]";
+        }
     }
 }

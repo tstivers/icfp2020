@@ -6,5 +6,10 @@
         {
             return new Constant((arg as Constant).Value + 1);
         }
+
+        public override string ToString()
+        {
+            return $"inc";
+        }
     }
 }

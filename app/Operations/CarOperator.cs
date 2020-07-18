@@ -6,5 +6,10 @@
         {
             return (arg as ConsOperator).Value1;
         }
+
+        public override string ToString()
+        {
+            return $"car";
+        }
     }
 }

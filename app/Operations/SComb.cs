@@ -32,5 +32,10 @@
 
             return (arg1 as IApplyable).Apply(arg2);
         }
+
+        public override string ToString()
+        {
+            return $"s [{Value1}] [{Value2}]";
+        }
     }
 }

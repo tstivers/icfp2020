@@ -6,5 +6,10 @@
         {
             return arg;
         }
+
+        public override string ToString()
+        {
+            return $"i";
+        }
     }
 }

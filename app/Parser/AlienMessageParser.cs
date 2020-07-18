@@ -9,16 +9,25 @@ namespace app.Parser
     {
         public Dictionary<string, IToken> Variables = new Dictionary<string, IToken>();
 
-        public string Eval(string message)
+        private List<string[]> _lines;
+
+        public AlienMessageParser(string message)
         {
-            string result = "";
-            foreach (var line in message.Split(
+            _lines = message.Split(
                 new[] { "\r\n", "\r", "\n" },
                 StringSplitOptions.None
-            ))
+            ).Select(x => x.Split(" ")).ToList();
+        }
+
+        public string Eval()
+        {
+            string result = "";
+            foreach (var line in _lines)
             {
-                result = EvalLine(line.Split(" "));
+                result = EvalLine(line);
             }
+
+            Console.WriteLine(result);
 
             return result;
         }
@@ -27,100 +36,114 @@ namespace app.Parser
         {
             if (ops[0].StartsWith(":")) // variable assignment
             {
-                (Variables[ops[0]], _) = EvalOpCode(ops.Skip(2).ToArray());
-                return Variables[ops[0]].ToString();
+                (Variables[ops[0]], _) = EvalOpCode(ops, 2);
+                return null;
+            }
+            else if (ops[0] == "galaxy")
+            {
+                //Console.WriteLine(Variables[ops[2]]);
+                return Variables[ops[2]].Resolve().ToString();
             }
             else
             {
-                var (value, _) = EvalOpCode(ops);
-                return value.ToString();
+                var (value, _) = EvalOpCode(ops, 0);
+
+                return value.Resolve().ToString();
             }
         }
 
-        public (IToken value, string[] remaining) EvalOpCode(string[] ops)
+        public (IToken value, int index) EvalOpCode(string[] ops, int index)
         {
-            (IToken value, string[] remaining) result;
-            var op = ops[0];
-            var remaining = ops.Skip(1).ToArray();
+            (IToken value, int index) result;
+            var op = ops[index];
+            index += 1;
 
             switch (op)
             {
                 case "ap":
-                    result = EvalOpCode(remaining);
+                    result = EvalOpCode(ops, index);
                     var apfunc = result.value;
-                    result = EvalOpCode(result.remaining);
-                    return ((apfunc as IApplyable).Apply(result.value), result.remaining);
+                    result = EvalOpCode(ops, result.index);
+                    return (new ApOperator(apfunc, result.value), result.index);
 
                 case "inc":
-                    return (new IncOperator(), remaining);
+                    return (new IncOperator(), index);
 
                 case "dec":
-                    return (new DecOperator(), remaining);
+                    return (new DecOperator(), index);
 
                 case "neg":
-                    return (new NegOperator(), remaining);
+                    return (new NegOperator(), index);
 
                 case "add":
-                    return (new AddOperator(), remaining);
+                    return (new AddOperator(), index);
 
                 case "mul":
-                    return (new MulOperator(), remaining);
+                    return (new MulOperator(), index);
 
                 case "div":
-                    return (new DivOperator(), remaining);
+                    return (new DivOperator(), index);
 
                 case "pwr2":
-                    return (new Pwr2Operator(), remaining);
+                    return (new Pwr2Operator(), index);
 
                 case "t":
-                    return (new KComb(), remaining);
+                    return (new KComb(), index);
 
                 case "f":
-                    return (new FComb(), remaining);
+                    return (new FComb(), index);
 
                 case "s":
-                    return (new SComb(), remaining);
+                    return (new SComb(), index);
 
                 case "c":
-                    return (new CComb(), remaining);
+                    return (new CComb(), index);
 
                 case "b":
-                    return (new BComb(), remaining);
+                    return (new BComb(), index);
 
                 case "i":
-                    return (new IComb(), remaining);
+                    return (new IComb(), index);
 
                 case "cons":
-                    return (new ConsOperator(), remaining);
+                    return (new ConsOperator(), index);
 
                 case "car":
-                    return (new CarOperator(), remaining);
+                    return (new CarOperator(), index);
 
                 case "cdr":
-                    return (new CdrOperator(), remaining);
+                    return (new CdrOperator(), index);
 
                 case "nil":
-                    return (new NilOperator(), remaining);
+                    return (new NilOperator(), index);
 
                 case "isnil":
-                    return (new IsNilOperator(), remaining);
+                    return (new IsNilOperator(), index);
 
                 case "eq":
-                    return (new EqOperator(), remaining);
+                    return (new EqOperator(), index);
+
+                case "lt":
+                    return (new EqOperator(), index);
 
                 default:
-                    if (decimal.TryParse(ops[0], out var constant)) // int constant
+                    if (decimal.TryParse(op, out var constant)) // int constant
                     {
-                        return (new Constant(decimal.Parse(op)), remaining);
+                        return (new Constant(decimal.Parse(op)), index);
+                    }
+
+                    if (op.StartsWith("x"))
+                    {
+                        return (new VarOperator(op), index);
                     }
 
                     if (op.StartsWith(":")) // variable reference
                     {
                         if (Variables.ContainsKey(op))
-                            return (Variables[op], remaining);
+                            return (Variables[op], index);
                         else
                         {
-                            return (new LateBoundToken(op), remaining);
+                            return (new LateBoundToken(op, Variables), index);
                         }
                     }
 

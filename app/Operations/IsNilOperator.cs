@@ -13,5 +13,10 @@ namespace app.Operations
             else
                 throw new InvalidOperationException();
         }
+
+        public override string ToString()
+        {
+            return $"isnill";
+        }
     }
 }

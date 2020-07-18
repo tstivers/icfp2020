@@ -7,12 +7,13 @@ namespace app.Operations
         private string _id;
         private Dictionary<string, IToken> _variables;
 
-        public LateBoundToken(string id)
+        public LateBoundToken(string id, Dictionary<string, IToken> variables)
         {
             _id = id;
+            _variables = variables;
         }
 
-        public IToken Bind()
+        public IToken Resolve()
         {
             return _variables[_id];
         }

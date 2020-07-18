@@ -1,12 +1,7 @@
-﻿using System;
-
-namespace app.Operations
+﻿namespace app.Operations
 {
     public interface IApplyable : IToken
     {
-        public IToken Apply(IToken value)
-        {
-            throw new NotImplementedException();
-        }
+        public IToken Apply(IToken value);
     }
 }

@@ -2,7 +2,7 @@
 {
     public class CComb : IApplyable
     {
-        public IApplyable Value1 { get; }
+        public IToken Value1 { get; }
         public IToken Value2 { get; }
 
         public CComb()
@@ -10,12 +10,12 @@
 
         private CComb(IToken value1)
         {
-            Value1 = (IApplyable)value1;
+            Value1 = value1;
         }
 
         private CComb(IToken value1, IToken value2)
         {
-            Value1 = (IApplyable)value1;
+            Value1 = value1;
             Value2 = value2;
         }
 
@@ -27,8 +27,13 @@
             if (Value2 == null)
                 return new CComb(Value1, arg);
 
-            var arg1 = Value1.Apply(arg) as IApplyable;
-            return arg1.Apply(Value2);
+            var arg1 = ((IApplyable)Value1.Resolve()).Apply(arg.Resolve()).Resolve() as IApplyable;
+            return arg1.Apply(Value2.Resolve()).Resolve();
+        }
+
+        public override string ToString()
+        {
+            return $"c [{Value1?.Resolve()}] [{Value2?.Resolve()}]".TrimEnd();
         }
     }
 }

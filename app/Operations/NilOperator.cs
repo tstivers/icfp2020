@@ -6,5 +6,10 @@
         {
             return new KComb();
         }
+
+        public override string ToString()
+        {
+            return "nil";
+        }
     }
 }

@@ -1,13 +1,13 @@
 ﻿namespace app.Operations
 {
-    public class EqOperator : IApplyable
+    public class LtOperator : IApplyable
     {
         public IToken Value { get; }
 
-        public EqOperator()
+        public LtOperator()
         { }
 
-        private EqOperator(IToken value)
+        private LtOperator(IToken value)
         {
             Value = value;
         }
@@ -15,17 +15,12 @@
         public IToken Apply(IToken arg)
         {
             if (Value == null)
-                return new EqOperator(arg);
+                return new LtOperator(arg);
 
-            if ((Value as Constant).Value == (arg as Constant).Value)
+            if ((Value as Constant).Value < (arg as Constant).Value)
                 return new KComb();
             else
                 return new FComb();
-        }
-
-        public override string ToString()
-        {
-            return $"eq [{Value}]";
         }
     }
 }
