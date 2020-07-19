@@ -21,7 +21,7 @@ namespace ui
         public ContestForm()
         {
             InitializeComponent();
-            var message = File.ReadAllText(@"c:\users\tstivers\source\repos\icfp2020\messages\test.txt");
+            var message = File.ReadAllText(@"..\..\..\..\messages\test.txt");
             Parser = new AlienMessageParser(message);
             Parser.Eval();
             PlayField = new List<Bitmap> { new Bitmap(1, 1) };

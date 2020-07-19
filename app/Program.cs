@@ -42,7 +42,7 @@ namespace app
 
         public static void Parse()
         {
-            var message = File.ReadAllText(@"c:\users\tstivers\source\repos\icfp2020\messages\test.txt");
+            var message = File.ReadAllText(@"..\..\..\..\messages\test.txt");
             var parser = new AlienMessageParser(message);
 
             parser.Eval();
