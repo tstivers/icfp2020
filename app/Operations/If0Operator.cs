@@ -27,7 +27,7 @@
             if (Value2 == null)
                 return new If0Operator(Value1, arg);
 
-            if (((Constant)Value1).Value == 0)
+            if (((ConstantOperator)Value1).Value == 0)
             {
                 return Value2;
             }

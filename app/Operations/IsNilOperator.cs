@@ -5,6 +5,17 @@ namespace app.Operations
 {
     public class IsNilOperator : IToken
     {
+        private static readonly IsNilOperator Empty = new IsNilOperator();
+
+        public static IsNilOperator Acquire()
+        {
+            return Empty;
+        }
+
+        private IsNilOperator()
+        {
+        }
+
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);

@@ -29,7 +29,7 @@ namespace app.Parser
         {
             var t = new Thread(() =>
             {
-                interactToken = Reduce(new ApOperator(interactToken, new ConsOperator(new Constant(x), new Constant(y))));
+                interactToken = Reduce(new ApOperator(interactToken, new ConsOperator(ConstantOperator.Acquire(x), ConstantOperator.Acquire(y))));
             }, 1024 * 1024 * 1024);
 
             t.Start();
@@ -47,6 +47,7 @@ namespace app.Parser
             DivOperator.Cache.Clear();
             MulOperator.Cache.Clear();
             AddOperator.Cache.Clear();
+            ConstantOperator.Cache.Clear();
 
             return lastInteractResult;
         }
@@ -214,7 +215,7 @@ namespace app.Parser
                         break;
 
                     case "i":
-                        token = new IComb();
+                        token = IComb.Acquire();
                         break;
 
                     case "cons":
@@ -231,11 +232,11 @@ namespace app.Parser
                         break;
 
                     case "nil":
-                        token = new NilOperator();
+                        token = NilOperator.Acquire();
                         break;
 
                     case "isnil":
-                        token = new IsNilOperator();
+                        token = IsNilOperator.Acquire();
                         break;
 
                     case "eq":
@@ -250,13 +251,13 @@ namespace app.Parser
                         token = new LtOperator();
                         break;
 
-                    case "mod":
-                        token = new ModOperator();
-                        break;
+                    //case "mod":
+                    //    token = new ModOperator();
+                    //    break;
 
-                    case "dem":
-                        token = new DemodOperator();
-                        break;
+                    //case "dem":
+                    //    token = new DemodOperator();
+                    //    break;
 
                     case "interact":
                         token = new InteractOperator();
@@ -265,7 +266,7 @@ namespace app.Parser
                     default:
                         if (decimal.TryParse(op, out var constant)) // int constant
                         {
-                            token = new Constant(decimal.Parse(op));
+                            token = ConstantOperator.Acquire(decimal.Parse(op));
                         }
                         else if (op.StartsWith("x"))
                         {

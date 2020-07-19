@@ -45,7 +45,7 @@ namespace app.Operations
             x0 = AlienMessageParser.Reduce(x0);
             var x1 = AlienMessageParser.Reduce(arg);
 
-            return new Constant(decimal.Round(x0.AsValue() / x1.AsValue(), MidpointRounding.ToZero));
+            return ConstantOperator.Acquire(decimal.Round(x0.AsValue() / x1.AsValue(), MidpointRounding.ToZero));
         }
 
         public override string ToString()

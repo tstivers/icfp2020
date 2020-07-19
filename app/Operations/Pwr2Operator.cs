@@ -7,7 +7,7 @@ namespace app.Operations
     {
         public IToken Apply(IToken arg)
         {
-            return new Constant((decimal)Math.Pow(2, (double)arg.AsValue()));
+            return ConstantOperator.Acquire((decimal)Math.Pow(2, (double)arg.AsValue()));
         }
 
         public override string ToString()

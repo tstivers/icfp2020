@@ -22,7 +22,7 @@ namespace app.Operations
             var x0 = AlienMessageParser.Reduce(Value);
             var x1 = AlienMessageParser.Reduce(arg);
 
-            if ((x0 as Constant).Value < (x1 as Constant).Value)
+            if ((x0 as ConstantOperator).Value < (x1 as ConstantOperator).Value)
                 return new KComb();
             else
                 return new FComb();

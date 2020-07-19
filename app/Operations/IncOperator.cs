@@ -1,4 +1,5 @@
-﻿using app.Parser;
+﻿using app.Extensions;
+using app.Parser;
 
 namespace app.Operations
 {
@@ -18,7 +19,7 @@ namespace app.Operations
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);
-            return new Constant((x0 as Constant).Value + 1);
+            return ConstantOperator.Acquire(x0.AsValue() + 1);
         }
 
         public override string ToString()

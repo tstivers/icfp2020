@@ -15,7 +15,7 @@ namespace app.Extensions
 
         public static decimal AsValue(this IToken token)
         {
-            return ((Constant)token).Value;
+            return ((ConstantOperator)token).Value;
         }
 
         public static IToken Car(this IToken token)

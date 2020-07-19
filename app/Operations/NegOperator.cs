@@ -19,7 +19,7 @@ namespace app.Operations
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);
-            return new Constant(-x0.AsValue());
+            return ConstantOperator.Acquire(-x0.AsValue());
         }
 
         public override string ToString()
