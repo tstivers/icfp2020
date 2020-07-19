@@ -4,6 +4,17 @@ namespace app.Operations
 {
     public class DecOperator : IToken
     {
+        private static readonly DecOperator Empty = new DecOperator();
+
+        public static DecOperator Acquire()
+        {
+            return Empty;
+        }
+
+        private DecOperator()
+        {
+        }
+
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);

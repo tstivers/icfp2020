@@ -4,6 +4,17 @@ namespace app.Operations
 {
     public class IncOperator : IToken
     {
+        private static readonly IncOperator Empty = new IncOperator();
+
+        public static IncOperator Acquire()
+        {
+            return Empty;
+        }
+
+        private IncOperator()
+        {
+        }
+
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);

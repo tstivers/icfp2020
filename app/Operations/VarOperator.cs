@@ -1,17 +1,32 @@
-﻿namespace app.Operations
+﻿using System.Collections.Generic;
+
+namespace app.Operations
 {
     public class VarOperator : IToken
     {
-        public string Id;
+        public static Dictionary<string, VarOperator> Cache = new Dictionary<string, VarOperator>();
 
-        public VarOperator(string id)
+        private readonly string _id;
+
+        public static VarOperator Acquire(string id)
         {
-            Id = id;
+            if (Cache.TryGetValue(id, out var cached))
+                return cached;
+
+            var x = new VarOperator(id);
+            Cache[id] = x;
+
+            return x;
+        }
+
+        private VarOperator(string id)
+        {
+            _id = id;
         }
 
         public override string ToString()
         {
-            return Id;
+            return _id;
         }
     }
 }

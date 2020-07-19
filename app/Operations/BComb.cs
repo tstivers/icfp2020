@@ -1,33 +1,61 @@
-﻿namespace app.Operations
+﻿using System;
+using System.Collections.Generic;
+
+namespace app.Operations
 {
     public class BComb : IToken
     {
-        public IToken x0 { get; }
-        public IToken x1 { get; }
+        private static readonly BComb Empty = new BComb();
 
-        public BComb()
-        { }
+        public static Dictionary<Tuple<IToken, IToken, IToken>, IToken> Cache = new Dictionary<Tuple<IToken, IToken, IToken>, IToken>();
 
-        private BComb(IToken value1)
+        private readonly IToken x0;
+        private readonly IToken x1;
+
+        public static BComb Acquire()
         {
-            x0 = value1;
+            return Empty;
         }
 
-        private BComb(IToken value1, IToken value2)
+        private static IToken Acquire(IToken arg0, IToken arg1, IToken arg2)
         {
-            x0 = value1;
-            x1 = value2;
+            var key = Tuple.Create(arg0, arg1, arg2);
+            if (Cache.TryGetValue(key, out var cached))
+                return cached;
+
+            IToken x;
+            if (arg2 == null)
+            {
+                x = new BComb(arg0, arg1);
+            }
+            else
+            {
+                x = new ApOperator(arg0, new ApOperator(arg1, arg2));
+            }
+
+            Cache[key] = x;
+            return x;
         }
 
-        public IToken Apply(IToken x2)
+        private BComb()
+        {
+        }
+
+        private BComb(IToken arg1, IToken arg2)
+        {
+            x0 = arg1;
+            x1 = arg2;
+        }
+
+        public IToken Apply(IToken arg)
         {
             if (x0 == null)
-                return new BComb(x2);
+                return Acquire(arg, null, null);
 
             if (x1 == null)
-                return new BComb(x0, x2);
+                return Acquire(x0, arg, null);
 
-            return new ApOperator(x0, new ApOperator(x1, x2));
+            return Acquire(x0, x1, arg);
         }
 
         public override string ToString()

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace app.Parser
 {
@@ -21,11 +22,37 @@ namespace app.Parser
             ).Select(x => x.Split(" ", StringSplitOptions.RemoveEmptyEntries)).ToList();
         }
 
-        public Stack<ApOperator> Stack;
+        public IToken interactToken;
+        public static IToken lastInteractResult;
 
-        public string Eval()
+        public IToken Interact(int x, int y)
         {
-            string result = "";
+            var t = new Thread(() =>
+            {
+                interactToken = Reduce(new ApOperator(interactToken, new ConsOperator(new Constant(x), new Constant(y))));
+            }, 1024 * 1024 * 1024);
+
+            t.Start();
+            t.Join();
+
+            ReducedCache.Clear();
+
+            BComb.Cache.Clear();
+            CComb.Cache.Clear();
+            SComb.Cache.Clear();
+
+            LateBoundToken.Cache.Clear();
+
+            VarOperator.Cache.Clear();
+            DivOperator.Cache.Clear();
+            MulOperator.Cache.Clear();
+            AddOperator.Cache.Clear();
+
+            return lastInteractResult;
+        }
+
+        public void Eval()
+        {
             foreach (var line in _lines.Take(_lines.Count - 1))
             {
                 ParseLine(line);
@@ -38,13 +65,7 @@ namespace app.Parser
             //}
 
             var last = ParseTokens(_lines.Last().Skip(2).ToArray());
-
-            Console.WriteLine("executing galaxy");
-            var t = Reduce(last, "galaxy");
-
-            Console.WriteLine(t);
-
-            return result;
+            interactToken = Reduce(last);
         }
 
         public void ParseLine(string[] ops)
@@ -55,8 +76,11 @@ namespace app.Parser
             }
         }
 
-        public static IToken Reduce(IToken token, string name = null)
+        public static IToken Reduce(IToken token)
         {
+            if (token == null)
+                return null;
+
             //if (name != null)
             //    Console.WriteLine($"   Reducing {name}");
 
@@ -66,7 +90,7 @@ namespace app.Parser
             Stack<IToken> stack = new Stack<IToken>();
 
             if (token is LateBoundToken t)
-                return Reduce(Variables[t.Id], t.Id);
+                return Reduce(Variables[t.Id]);
 
             if (token is ApOperator ap)
             {
@@ -104,10 +128,10 @@ namespace app.Parser
                 }
 
                 while (f is LateBoundToken lb)
-                    f = Reduce(Variables[lb.Id], lb.Id);
+                    f = Reduce(Variables[lb.Id]);
 
                 while (x is LateBoundToken lx)
-                    x = Reduce(Variables[lx.Id], lx.Id);
+                    x = Reduce(Variables[lx.Id]);
 
                 stack.Push(f.Apply(x));
             }
@@ -126,7 +150,7 @@ namespace app.Parser
 
         public IToken ParseTokens(string[] ops)
         {
-            Stack = new Stack<ApOperator>();
+            var Stack = new Stack<ApOperator>();
             IToken token = null;
 
             for (int i = 0; i < ops.Length; i++)
@@ -140,23 +164,23 @@ namespace app.Parser
                         break;
 
                     case "inc":
-                        token = new IncOperator();
+                        token = IncOperator.Acquire();
                         break;
 
                     case "dec":
-                        token = new DecOperator();
+                        token = DecOperator.Acquire();
                         break;
 
                     case "neg":
-                        token = new NegOperator();
+                        token = NegOperator.Acquire();
                         break;
 
                     case "add":
-                        token = new AddOperator();
+                        token = AddOperator.Acquire();
                         break;
 
                     case "mul":
-                        token = new MulOperator();
+                        token = MulOperator.Acquire();
                         break;
 
                     //case "l":
@@ -186,7 +210,7 @@ namespace app.Parser
                         break;
 
                     case "b":
-                        token = new BComb();
+                        token = BComb.Acquire();
                         break;
 
                     case "i":
@@ -203,7 +227,7 @@ namespace app.Parser
                         break;
 
                     case "cdr":
-                        token = new CdrOperator();
+                        token = CdrOperator.Acquire();
                         break;
 
                     case "nil":
@@ -245,11 +269,11 @@ namespace app.Parser
                         }
                         else if (op.StartsWith("x"))
                         {
-                            token = new VarOperator(op);
+                            token = VarOperator.Acquire(op);
                         }
                         else if (op.StartsWith(":")) // variable reference
                         {
-                            token = new LateBoundToken(op, Variables);
+                            token = LateBoundToken.Acquire(op);
                         }
                         else
                             throw new InvalidOperationException();

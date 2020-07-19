@@ -8,7 +8,7 @@ namespace app.Operations
     public class DivOperator : IToken
     {
         private static DivOperator _empty = new DivOperator();
-        private static Dictionary<IToken, DivOperator> _cache = new Dictionary<IToken, DivOperator>();
+        public static Dictionary<IToken, DivOperator> Cache = new Dictionary<IToken, DivOperator>();
 
         public static DivOperator Acquire()
         {
@@ -17,11 +17,11 @@ namespace app.Operations
 
         private static DivOperator Acquire(IToken arg1)
         {
-            if (_cache.TryGetValue(arg1, out var cached))
+            if (Cache.TryGetValue(arg1, out var cached))
                 return cached;
 
             var x = new DivOperator(arg1);
-            _cache[arg1] = x;
+            Cache[arg1] = x;
 
             return x;
         }
@@ -46,6 +46,11 @@ namespace app.Operations
             var x1 = AlienMessageParser.Reduce(arg);
 
             return new Constant(decimal.Round(x0.AsValue() / x1.AsValue(), MidpointRounding.ToZero));
+        }
+
+        public override string ToString()
+        {
+            return $"div [{x0}]";
         }
     }
 }

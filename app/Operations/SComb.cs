@@ -7,7 +7,7 @@ namespace app.Operations
     {
         private static readonly SComb Empty = new SComb();
 
-        private static Dictionary<Tuple<IToken, IToken, IToken>, IToken> _cache = new Dictionary<Tuple<IToken, IToken, IToken>, IToken>();
+        public static Dictionary<Tuple<IToken, IToken, IToken>, IToken> Cache = new Dictionary<Tuple<IToken, IToken, IToken>, IToken>();
 
         private IToken x0;
         private IToken x1;
@@ -20,7 +20,7 @@ namespace app.Operations
         private static IToken Acquire(IToken arg0, IToken arg1, IToken arg2)
         {
             var key = Tuple.Create(arg0, arg1, arg2);
-            if (_cache.TryGetValue(key, out var cached))
+            if (Cache.TryGetValue(key, out var cached))
                 return cached;
 
             IToken x;
@@ -33,7 +33,7 @@ namespace app.Operations
                 x = new ApOperator(new ApOperator(arg0, arg2), new ApOperator(arg1, arg2));
             }
 
-            _cache[key] = x;
+            Cache[key] = x;
             return x;
         }
 

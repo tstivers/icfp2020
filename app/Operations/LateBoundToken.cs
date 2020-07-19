@@ -4,18 +4,29 @@ namespace app.Operations
 {
     public class LateBoundToken : IToken
     {
-        public string Id;
-        public Dictionary<string, IToken> Variables;
+        public static Dictionary<string, LateBoundToken> Cache = new Dictionary<string, LateBoundToken>();
 
-        public LateBoundToken(string id, Dictionary<string, IToken> variables)
+        public readonly string Id;
+
+        public static LateBoundToken Acquire(string id)
+        {
+            if (Cache.TryGetValue(id, out var cached))
+                return cached;
+
+            var x = new LateBoundToken(id);
+            Cache[id] = x;
+
+            return x;
+        }
+
+        private LateBoundToken(string id)
         {
             Id = id;
-            Variables = variables;
         }
 
         public override string ToString()
         {
-            return $"{Id}";
+            return Id;
         }
     }
 }

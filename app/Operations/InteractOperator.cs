@@ -1,10 +1,7 @@
 ﻿using app.Extensions;
 using app.Parser;
-using System.Collections.Generic;
+using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
 
 namespace app.Operations
 {
@@ -12,6 +9,10 @@ namespace app.Operations
     {
         public IToken Protocol { get; }
         public IToken State { get; }
+
+        public delegate Tuple<int, int> ProcessStepDelegate(IToken data);
+
+        public static ProcessStepDelegate ProcessStep;
 
         public InteractOperator()
         { }
@@ -40,36 +41,22 @@ namespace app.Operations
             var p1 = AlienMessageParser.Reduce(Protocol.Apply(State));
             var p2 = AlienMessageParser.Reduce(p1.Apply(Vector));
 
-            var flag = p2.AsCons().Value1.AsValue();
+            var flag = p2.Car().AsValue();
+            Debug.Assert(flag == 0);
 
-            var newState = p2.AsCons().Value2.AsCons().Value1;
+            var newState = p2.Cdr().Car();
             var data = p2.AsCons().Value2.AsCons().Value2.AsCons();
 
-            var picture = data.AsCons().Value1.AsCons().Value1;
-            var pic2 = data.AsCons().Value1.AsCons().Value2.AsCons().Value1;
-
-            var pts = picture.ToCells('#').Concat(pic2.ToCells('+')).ToList();
-
-            var draw = new DrawOperator();
-            draw.Draw(pts);
-
-            var x = new List<List<Point>>();
+            AlienMessageParser.lastInteractResult = data;
 
             Debug.Assert(p2.AsCons().Value2.AsCons().Value2.AsCons().Value2 is NilOperator);
 
-            Thread.Sleep(20000);
-
-            return p2;
-        }
-
-        private IToken f38(IToken protocol, IToken presult)
-        {
-            return null;
+            return new InteractOperator(Protocol, newState);
         }
 
         public override string ToString()
         {
-            return $"s [{Protocol}] [{State}]";
+            return $"interact [{Protocol}] [{State}]";
         }
     }
 }

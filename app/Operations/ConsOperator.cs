@@ -15,7 +15,7 @@ namespace app.Operations
             Value1 = value1;
         }
 
-        private ConsOperator(IToken value1, IToken value2)
+        public ConsOperator(IToken value1, IToken value2)
         {
             Value1 = AlienMessageParser.Reduce(value1);
             Value2 = AlienMessageParser.Reduce(value2);
