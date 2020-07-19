@@ -32,6 +32,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.colorsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.chkGrid = new System.Windows.Forms.CheckBox();
+            this.btnCacheKill = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.tableLayoutPanel1.SuspendLayout();
@@ -66,6 +67,7 @@
             // colorsPanel
             // 
             this.colorsPanel.Controls.Add(this.chkGrid);
+            this.colorsPanel.Controls.Add(this.btnCacheKill);
             this.colorsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.colorsPanel.Location = new System.Drawing.Point(777, 3);
             this.colorsPanel.Name = "colorsPanel";
@@ -82,6 +84,16 @@
             this.chkGrid.Text = "Show Grid";
             this.chkGrid.UseVisualStyleBackColor = true;
             this.chkGrid.CheckedChanged += new System.EventHandler(this.chkGrid_CheckedChanged);
+            // 
+            // btnCacheKill
+            // 
+            this.btnCacheKill.Location = new System.Drawing.Point(3, 28);
+            this.btnCacheKill.Name = "btnCacheKill";
+            this.btnCacheKill.Size = new System.Drawing.Size(75, 23);
+            this.btnCacheKill.TabIndex = 1;
+            this.btnCacheKill.Text = "Kill Cache";
+            this.btnCacheKill.UseVisualStyleBackColor = true;
+            this.btnCacheKill.Click += new System.EventHandler(this.btnCacheKill_Click);
             // 
             // pictureBox
             // 
@@ -121,6 +133,7 @@
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.CheckBox chkGrid;
         private System.Windows.Forms.ColorDialog ColorPicker;
+        private System.Windows.Forms.Button btnCacheKill;
     }
 }
 

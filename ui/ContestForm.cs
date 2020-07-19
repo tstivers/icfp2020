@@ -178,5 +178,10 @@ namespace ui
             pictureBox.Invalidate();
 
         }
+
+        private void btnCacheKill_Click(object sender, System.EventArgs e)
+        {
+            AlienMessageParser.ClearCaches();
+        }
     }
 }
