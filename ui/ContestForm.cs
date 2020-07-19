@@ -27,6 +27,36 @@ namespace ui
             Parser = new AlienMessageParser(message);
             Parser.Eval();
             PlayField = new List<Bitmap> { new Bitmap(1, 1) };
+            DisplayColorList();
+        }
+
+        public void DisplayColorList()
+        {
+            pnlColors.Controls.Clear();
+            for(int idx = 0; idx < Colors.Count; idx++)
+            {
+                string labelText;
+                switch (idx) {
+                    case 0:
+                        labelText = "Background";
+                        break;
+                    case 1:
+                        labelText = "Grid";
+                        break;
+                    default:
+                        labelText = "Layer " + (idx - 1);
+                        break;
+
+                }
+                var btnColorButton = new Button();
+                var pnlColorDisplay = new Panel();
+                pnlColorDisplay.BackColor = Colors[idx];
+                pnlColorDisplay.Width = 10;
+                pnlColorDisplay.Height = 10;
+                btnColorButton.Controls.Add(pnlColorDisplay);
+                btnColorButton.Text = labelText;
+                pnlColors.Controls.Add(btnColorButton);
+            }
         }
 
         private void pictureBox_Click(object sender, System.EventArgs e)
