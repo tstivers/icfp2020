@@ -33,7 +33,9 @@ namespace app.Parser
 
             t.Start();
             t.Join();
-
+            ClearCaches();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
             return lastInteractResult;
         }
 
@@ -155,7 +157,7 @@ namespace app.Parser
             if (bleh is ApOperator woot)
             {
                 var reduced = Reduce(woot);
-                ReducedCache[bleh] = reduced;
+                ReducedCache[token] = reduced;
                 return reduced;
             }
 
