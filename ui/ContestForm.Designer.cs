@@ -31,8 +31,11 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.colorsPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.chkGrid = new System.Windows.Forms.CheckBox();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.tableLayoutPanel1.SuspendLayout();
+            this.colorsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,11 +65,23 @@
             // 
             // colorsPanel
             // 
+            this.colorsPanel.Controls.Add(this.chkGrid);
             this.colorsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.colorsPanel.Location = new System.Drawing.Point(777, 3);
             this.colorsPanel.Name = "colorsPanel";
             this.colorsPanel.Size = new System.Drawing.Size(149, 539);
             this.colorsPanel.TabIndex = 0;
+            // 
+            // chkGrid
+            // 
+            this.chkGrid.AutoSize = true;
+            this.chkGrid.Location = new System.Drawing.Point(3, 3);
+            this.chkGrid.Name = "chkGrid";
+            this.chkGrid.Size = new System.Drawing.Size(80, 19);
+            this.chkGrid.TabIndex = 0;
+            this.chkGrid.Text = "Show Grid";
+            this.chkGrid.UseVisualStyleBackColor = true;
+            this.chkGrid.CheckedChanged += new System.EventHandler(this.chkGrid_CheckedChanged);
             // 
             // pictureBox
             // 
@@ -89,6 +104,8 @@
             this.Name = "ContestForm";
             this.Text = "Howdy";
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.colorsPanel.ResumeLayout(false);
+            this.colorsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -102,6 +119,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel colorsPanel;
         private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.CheckBox chkGrid;
+        private System.Windows.Forms.ColorDialog ColorPicker;
     }
 }
 

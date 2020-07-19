@@ -18,6 +18,8 @@ namespace ui
 
         public List<Color> Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
 
+        private bool ShowGrid = false;
+
         public ContestForm()
         {
             InitializeComponent();
@@ -121,7 +123,7 @@ namespace ui
             }
 
             // draw grid
-            if (false)
+            if (ShowGrid)
             {
                 Bitmap grid = new Bitmap(pictureBox.Width, pictureBox.Height);
                 using (var g = Graphics.FromImage(grid))
@@ -168,6 +170,13 @@ namespace ui
         {
             var p = GetScaledPoint(e.Location);
             this.Text = $"({p.X}, {p.Y})";
+        }
+
+        private void chkGrid_CheckedChanged(object sender, System.EventArgs e)
+        {
+            ShowGrid = chkGrid.Checked;
+            pictureBox.Invalidate();
+
         }
     }
 }
