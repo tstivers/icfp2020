@@ -1,22 +1,27 @@
 ﻿using app.Extensions;
 using app.Operations;
 using app.Parser;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
 namespace ui
 {
     public partial class ContestForm : Form
     {
+        private int EditingColorIdx { get; set; }
         private AlienMessageParser Parser { get; }
         public List<Bitmap> PlayField { get; set; }
         public Rectangle Dimensions { get; set; }
 
-        public List<Color> Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
+        public List<Color> Colors = new List<Color>();
 
         private bool ShowGrid = false;
 
@@ -27,8 +32,29 @@ namespace ui
             Parser = new AlienMessageParser(message);
             Parser.Eval();
             PlayField = new List<Bitmap> { new Bitmap(1, 1) };
+            LoadColors();
             DisplayColorList();
             RedrawPlayfield(Parser.SkipToUniverse());
+        }
+
+        public void LoadColors()
+        {
+            if ( File.Exists("./Colors.bin") )
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream("./Colors.bin", FileMode.Open, FileAccess.Read);
+                Colors = (List<Color>)formatter.Deserialize(stream);
+                stream.Close();
+            }
+            else Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
+        }
+
+        public void SaveColors()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream("./Colors.bin", FileMode.OpenOrCreate, FileAccess.Write);
+            formatter.Serialize(stream, Colors);
+            stream.Close();
         }
 
         public void DisplayColorList()
@@ -51,14 +77,25 @@ namespace ui
                         labelText = "Layer " + (idx - 1);
                         break;
                 }
-                var btnColorButton = new Button();
-                var pnlColorDisplay = new Panel();
-                pnlColorDisplay.BackColor = Colors[idx];
-                pnlColorDisplay.Width = 10;
-                pnlColorDisplay.Height = 10;
-                btnColorButton.Controls.Add(pnlColorDisplay);
-                btnColorButton.Text = labelText;
+                var btnColorButton = new ColorButton(labelText, Colors[idx], idx);
+                btnColorButton.Width = 100;
+                btnColorButton.Click += new System.EventHandler(colorBtnClick);
                 pnlColors.Controls.Add(btnColorButton);
+            }
+        }
+
+        private void colorBtnClick(object sender, EventArgs args)
+        {
+            ColorButton btn = (sender as ColorButton);
+            ColorPicker.Color = btn.LayerColor;
+            EditingColorIdx = btn.ColorIdx;
+            if ( ColorPicker.ShowDialog() != DialogResult.Cancel )
+            {
+                Colors[btn.ColorIdx] = ColorPicker.Color;
+                btn.SetColor(ColorPicker.Color);
+                pictureBox.Invalidate();
+                SaveColors();
+
             }
         }
 
@@ -214,6 +251,30 @@ namespace ui
         private void btnCacheKill_Click(object sender, System.EventArgs e)
         {
             AlienMessageParser.ClearCaches();
+        }
+    }
+
+    class ColorButton : Button
+    {
+        public int ColorIdx { get; set; }
+        public Color LayerColor { get; set; }
+
+        public ColorButton(string labelText, Color boundColor, int colorIndex)
+        {
+            var pnlColorDisplay = new Panel();
+            pnlColorDisplay.BackColor = boundColor;
+            pnlColorDisplay.Width = 10;
+            pnlColorDisplay.Height = 10;
+            Controls.Add(pnlColorDisplay);
+            Text = labelText;
+            ColorIdx = colorIndex;
+            LayerColor = boundColor;
+        }
+
+        public void SetColor(Color newColor)
+        {
+            var colorDisplay = (Controls[0] as Panel);
+            colorDisplay.BackColor = newColor;
         }
     }
 }

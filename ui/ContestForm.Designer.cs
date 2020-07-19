@@ -33,9 +33,9 @@
             this.colorsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.chkGrid = new System.Windows.Forms.CheckBox();
             this.btnCacheKill = new System.Windows.Forms.Button();
+            this.pnlColors = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
-            this.pnlColors = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.colorsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -97,6 +97,13 @@
             this.btnCacheKill.UseVisualStyleBackColor = true;
             this.btnCacheKill.Click += new System.EventHandler(this.btnCacheKill_Click);
             // 
+            // pnlColors
+            // 
+            this.pnlColors.Location = new System.Drawing.Point(3, 57);
+            this.pnlColors.Name = "pnlColors";
+            this.pnlColors.Size = new System.Drawing.Size(146, 248);
+            this.pnlColors.TabIndex = 2;
+            // 
             // pictureBox
             // 
             this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -109,13 +116,6 @@
             this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
-            // 
-            // pnlColors
-            // 
-            this.pnlColors.Location = new System.Drawing.Point(3, 57);
-            this.pnlColors.Name = "pnlColors";
-            this.pnlColors.Size = new System.Drawing.Size(146, 248);
-            this.pnlColors.TabIndex = 2;
             // 
             // ContestForm
             // 
