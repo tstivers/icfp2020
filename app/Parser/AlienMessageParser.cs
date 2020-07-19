@@ -9,6 +9,7 @@ namespace app.Parser
     public class AlienMessageParser
     {
         public static Dictionary<string, IToken> Variables = new Dictionary<string, IToken>();
+        public static Dictionary<IToken, IToken> ReducedCache = new Dictionary<IToken, IToken>();
 
         private List<string[]> _lines;
 
@@ -30,14 +31,15 @@ namespace app.Parser
                 ParseLine(line);
             }
 
-            //foreach (var key in Variables.Keys.OrderBy(x => x))
+            //foreach (var key in Variables.Keys.OrderBy(x => x).ToList())
             //{
-            //    Console.WriteLine($"reducing {key}");
-            //    Reduce(Variables[key]);
+            //    Console.WriteLine($"precompiling {key}");
+            //    Variables[key] = Reduce(Variables[key]);
             //}
 
             var last = ParseTokens(_lines.Last().Skip(2).ToArray());
 
+            Console.WriteLine("executing galaxy");
             var t = Reduce(last, "galaxy");
 
             Console.WriteLine(t);
@@ -57,6 +59,9 @@ namespace app.Parser
         {
             //if (name != null)
             //    Console.WriteLine($"   Reducing {name}");
+
+            if (ReducedCache.ContainsKey(token))
+                return ReducedCache[token];
 
             Stack<IToken> stack = new Stack<IToken>();
 
@@ -109,8 +114,13 @@ namespace app.Parser
 
             var bleh = stack.Pop();
             if (bleh is ApOperator woot)
-                return Reduce(woot);
+            {
+                var reduced = Reduce(woot);
+                ReducedCache[bleh] = reduced;
+                return reduced;
+            }
 
+            ReducedCache[token] = bleh;
             return bleh;
         }
 
@@ -149,12 +159,12 @@ namespace app.Parser
                         token = new MulOperator();
                         break;
 
-                    case "l":
-                        token = new LOperator();
-                        break;
+                    //case "l":
+                    //    token = new LOperator();
+                    //    break;
 
                     case "div":
-                        token = new DivOperator();
+                        token = DivOperator.Acquire();
                         break;
 
                     //case "pwr2":
@@ -168,11 +178,11 @@ namespace app.Parser
                     //    return (new FComb(), index);
 
                     case "s":
-                        token = new SComb();
+                        token = SComb.Acquire();
                         break;
 
                     case "c":
-                        token = new CComb();
+                        token = CComb.Acquire();
                         break;
 
                     case "b":
@@ -189,7 +199,7 @@ namespace app.Parser
                         break;
 
                     case "car":
-                        token = new CarOperator();
+                        token = CarOperator.Acquire();
                         break;
 
                     case "cdr":

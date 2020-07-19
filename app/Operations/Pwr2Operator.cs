@@ -1,4 +1,5 @@
-﻿using System;
+﻿using app.Extensions;
+using System;
 
 namespace app.Operations
 {
@@ -6,12 +7,12 @@ namespace app.Operations
     {
         public IToken Apply(IToken arg)
         {
-            return new Constant((decimal)Math.Pow(2, (double)(arg as Constant).Value));
+            return new Constant((decimal)Math.Pow(2, (double)arg.AsValue()));
         }
 
         public override string ToString()
         {
-            return "neg";
+            return "pwr2";
         }
     }
 }

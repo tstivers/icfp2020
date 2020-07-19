@@ -1,16 +1,44 @@
-﻿namespace app.Operations
+﻿using System;
+using System.Collections.Generic;
+
+namespace app.Operations
 {
     public class CComb : IToken
     {
-        public IToken x0 { get; }
-        public IToken x1 { get; }
+        private static readonly CComb Empty = new CComb();
 
-        public CComb()
-        { }
+        private static Dictionary<Tuple<IToken, IToken, IToken>, IToken> _cache = new Dictionary<Tuple<IToken, IToken, IToken>, IToken>();
 
-        private CComb(IToken arg)
+        private IToken x0;
+        private IToken x1;
+
+        public static CComb Acquire()
         {
-            x0 = arg;
+            return Empty;
+        }
+
+        private static IToken Acquire(IToken arg0, IToken arg1, IToken arg2)
+        {
+            var key = Tuple.Create(arg0, arg1, arg2);
+            if (_cache.TryGetValue(key, out var cached))
+                return cached;
+
+            IToken x;
+            if (arg2 == null)
+            {
+                x = new CComb(arg0, arg1);
+            }
+            else
+            {
+                x = new ApOperator(new ApOperator(arg0, arg2), arg1);
+            }
+
+            _cache[key] = x;
+            return x;
+        }
+
+        private CComb()
+        {
         }
 
         private CComb(IToken arg1, IToken arg2)
@@ -19,15 +47,15 @@
             x1 = arg2;
         }
 
-        public IToken Apply(IToken x2)
+        public IToken Apply(IToken arg)
         {
             if (x0 == null)
-                return new CComb(x2);
+                return Acquire(arg, null, null);
 
             if (x1 == null)
-                return new CComb(x0, x2);
+                return Acquire(x0, arg, null);
 
-            return new ApOperator(new ApOperator(x0, x2), x1);
+            return Acquire(x0, x1, arg);
         }
 
         public override string ToString()

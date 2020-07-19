@@ -1,29 +1,51 @@
-﻿using app.Parser;
+﻿using app.Extensions;
+using app.Parser;
 using System;
+using System.Collections.Generic;
 
 namespace app.Operations
 {
     public class DivOperator : IToken
     {
-        public IToken Value { get; }
+        private static DivOperator _empty = new DivOperator();
+        private static Dictionary<IToken, DivOperator> _cache = new Dictionary<IToken, DivOperator>();
 
-        public DivOperator()
-        { }
+        public static DivOperator Acquire()
+        {
+            return _empty;
+        }
+
+        private static DivOperator Acquire(IToken arg1)
+        {
+            if (_cache.TryGetValue(arg1, out var cached))
+                return cached;
+
+            var x = new DivOperator(arg1);
+            _cache[arg1] = x;
+
+            return x;
+        }
+
+        private IToken x0 { get; set; }
+
+        private DivOperator()
+        {
+        }
 
         private DivOperator(IToken value)
         {
-            Value = value;
+            x0 = value;
         }
 
         public IToken Apply(IToken arg)
         {
-            if (Value == null)
-                return new DivOperator(arg);
+            if (x0 == null)
+                return Acquire(arg);
 
-            var x0 = AlienMessageParser.Reduce(Value);
+            x0 = AlienMessageParser.Reduce(x0);
             var x1 = AlienMessageParser.Reduce(arg);
 
-            return new Constant(decimal.Round((x0 as Constant).Value / (x1 as Constant).Value, MidpointRounding.ToZero));
+            return new Constant(decimal.Round(x0.AsValue() / x1.AsValue(), MidpointRounding.ToZero));
         }
     }
 }

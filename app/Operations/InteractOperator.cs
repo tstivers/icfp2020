@@ -1,4 +1,10 @@
-﻿using app.Parser;
+﻿using app.Extensions;
+using app.Parser;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Threading;
 
 namespace app.Operations
 {
@@ -33,6 +39,25 @@ namespace app.Operations
 
             var p1 = AlienMessageParser.Reduce(Protocol.Apply(State));
             var p2 = AlienMessageParser.Reduce(p1.Apply(Vector));
+
+            var flag = p2.AsCons().Value1.AsValue();
+
+            var newState = p2.AsCons().Value2.AsCons().Value1;
+            var data = p2.AsCons().Value2.AsCons().Value2.AsCons();
+
+            var picture = data.AsCons().Value1.AsCons().Value1;
+            var pic2 = data.AsCons().Value1.AsCons().Value2.AsCons().Value1;
+
+            var pts = picture.ToCells('#').Concat(pic2.ToCells('+')).ToList();
+
+            var draw = new DrawOperator();
+            draw.Draw(pts);
+
+            var x = new List<List<Point>>();
+
+            Debug.Assert(p2.AsCons().Value2.AsCons().Value2.AsCons().Value2 is NilOperator);
+
+            Thread.Sleep(20000);
 
             return p2;
         }
