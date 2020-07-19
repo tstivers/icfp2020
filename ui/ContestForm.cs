@@ -1,6 +1,7 @@
 ﻿using app.Extensions;
 using app.Operations;
 using app.Parser;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,6 +13,7 @@ namespace ui
 {
     public partial class ContestForm : Form
     {
+        private int EditingColorIdx { get; set; }
         private AlienMessageParser Parser { get; }
         public List<Bitmap> PlayField { get; set; }
         public Rectangle Dimensions { get; set; }
@@ -48,14 +50,24 @@ namespace ui
                         break;
 
                 }
-                var btnColorButton = new Button();
-                var pnlColorDisplay = new Panel();
-                pnlColorDisplay.BackColor = Colors[idx];
-                pnlColorDisplay.Width = 10;
-                pnlColorDisplay.Height = 10;
-                btnColorButton.Controls.Add(pnlColorDisplay);
-                btnColorButton.Text = labelText;
+                var btnColorButton = new ColorButton(labelText, Colors[idx], idx);
+                btnColorButton.Width = 100;
+                btnColorButton.Click += new System.EventHandler(colorBtnClick);
                 pnlColors.Controls.Add(btnColorButton);
+            }
+        }
+
+        private void colorBtnClick(object sender, EventArgs args)
+        {
+            ColorButton btn = (sender as ColorButton);
+            ColorPicker.Color = btn.LayerColor;
+            EditingColorIdx = btn.ColorIdx;
+            if ( ColorPicker.ShowDialog() != DialogResult.Cancel )
+            {
+                Colors[btn.ColorIdx] = ColorPicker.Color;
+                btn.SetColor(ColorPicker.Color);
+                pictureBox.Invalidate();
+
             }
         }
 
@@ -212,6 +224,30 @@ namespace ui
         private void btnCacheKill_Click(object sender, System.EventArgs e)
         {
             AlienMessageParser.ClearCaches();
+        }
+    }
+
+    class ColorButton : Button
+    {
+        public int ColorIdx { get; set; }
+        public Color LayerColor { get; set; }
+
+        public ColorButton(string labelText, Color boundColor, int colorIndex)
+        {
+            var pnlColorDisplay = new Panel();
+            pnlColorDisplay.BackColor = boundColor;
+            pnlColorDisplay.Width = 10;
+            pnlColorDisplay.Height = 10;
+            Controls.Add(pnlColorDisplay);
+            Text = labelText;
+            ColorIdx = colorIndex;
+            LayerColor = boundColor;
+        }
+
+        public void SetColor(Color newColor)
+        {
+            var colorDisplay = (Controls[0] as Panel);
+            colorDisplay.BackColor = newColor;
         }
     }
 }
