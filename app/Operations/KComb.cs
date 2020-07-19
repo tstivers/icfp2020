@@ -5,7 +5,8 @@
         public IToken Value { get; }
 
         public KComb()
-        { }
+        {
+        }
 
         public bool SkipRight => Value != null;
 

@@ -16,7 +16,7 @@ namespace ui
         public List<Bitmap> PlayField { get; set; }
         public Rectangle Dimensions { get; set; }
 
-        public List<Color> Colors = new List<Color> { Color.Black, Color.Blue, Color.Aqua, Color.Red, Color.Green };
+        public List<Color> Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
 
         public ContestForm()
         {
@@ -70,21 +70,20 @@ namespace ui
 
             PlayField.Clear();
 
-            using (var c = Colors.AsEnumerable().GetEnumerator())
+            var ci = 2;
+            foreach (var pic in pictures)
             {
-                foreach (var pic in pictures)
+                var color = Colors[ci++];
+
+                var bm = new Bitmap(Dimensions.Right - Dimensions.Left + 1, Dimensions.Bottom - Dimensions.Top + 1);
+
+                foreach (var point in pic)
                 {
-                    c.MoveNext();
-                    var bm = new Bitmap(Dimensions.Right - Dimensions.Left + 1, Dimensions.Bottom - Dimensions.Top + 1);
-
-                    foreach (var point in pic)
-                    {
-                        bm.SetPixel(point.X + -minX, point.Y + -minY,
-                            Color.FromArgb(128, c.Current.R, c.Current.G, c.Current.B));
-                    }
-
-                    PlayField.Add(bm);
+                    bm.SetPixel(point.X + -minX, point.Y + -minY,
+                        Color.FromArgb(128, color.R, color.G, color.B));
                 }
+
+                PlayField.Add(bm);
             }
 
             pictureBox.Invalidate();
@@ -102,12 +101,58 @@ namespace ui
 
             e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
+
+            // draw background
+            Bitmap background = new Bitmap(pictureBox.Width, pictureBox.Height);
+            using (var g = Graphics.FromImage(background))
+            {
+                g.Clear(Colors[0]);
+            }
+
+            e.Graphics.DrawImage(background, 0, 0, pictureBox.Width, pictureBox.Height);
+
+            // draw layers
             if (PlayField != null)
             {
                 foreach (var bm in PlayField)
                 {
                     e.Graphics.DrawImage(bm, 0, 0, pictureBox.Width, pictureBox.Height);
                 }
+            }
+
+            // draw grid
+            if (false)
+            {
+                Bitmap grid = new Bitmap(pictureBox.Width, pictureBox.Height);
+                using (var g = Graphics.FromImage(grid))
+                {
+                    g.Clear(Color.FromArgb(0, 0, 0, 0));
+                    var last = 0;
+                    for (int x = 0; x < pictureBox.Width; x++) // vertical lines
+                    {
+                        var pt = GetScaledPoint(new Point(x, 0));
+
+                        if (pt.X != last)
+                        {
+                            g.DrawLine(new Pen(Colors[1]), new Point(x, 0), new Point(x, pictureBox.Height));
+                            last = pt.X;
+                        }
+                    }
+
+                    last = 0;
+                    for (int y = 0; y < pictureBox.Height; y++) // horizontal lines
+                    {
+                        var pt = GetScaledPoint(new Point(0, y));
+
+                        if (pt.Y != last)
+                        {
+                            g.DrawLine(new Pen(Colors[1]), new Point(0, y), new Point(pictureBox.Width, y));
+                            last = pt.Y;
+                        }
+                    }
+                }
+
+                e.Graphics.DrawImage(grid, 0, 0, pictureBox.Width, pictureBox.Height);
             }
         }
 
@@ -116,7 +161,7 @@ namespace ui
             var px = (double)p.X / pictureBox.Width;
             var py = (double)p.Y / pictureBox.Height;
 
-            return new Point((int)((Dimensions.Width + 0.5) * px) + Dimensions.Left, (int)((Dimensions.Height + 0.5) * py) + Dimensions.Top);
+            return new Point((int)((Dimensions.Width + 1) * px) + Dimensions.Left, (int)((Dimensions.Height + 1) * py) + Dimensions.Top);
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
