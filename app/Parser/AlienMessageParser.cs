@@ -29,27 +29,37 @@ namespace app.Parser
         {
             var t = new Thread(() =>
             {
-                interactToken = Reduce(new ApOperator(interactToken, new ConsOperator(ConstantOperator.Acquire(x), ConstantOperator.Acquire(y))));
+                interactToken = Reduce(ApOperator.Acquire(interactToken, ConsOperator.Acquire(ConstantOperator.Acquire(x), ConstantOperator.Acquire(y))));
             }, 1024 * 1024 * 1024);
 
             t.Start();
             t.Join();
 
+            return lastInteractResult;
+        }
+
+        public static void ClearCaches()
+        {
             ReducedCache.Clear();
 
             BComb.Cache.Clear();
             CComb.Cache.Clear();
             SComb.Cache.Clear();
+            KComb.Cache.Clear();
+
+            ApOperator.Cache.Clear();
+            ConsOperator.Cache.Clear();
 
             LateBoundToken.Cache.Clear();
 
-            VarOperator.Cache.Clear();
             DivOperator.Cache.Clear();
             MulOperator.Cache.Clear();
             AddOperator.Cache.Clear();
-            ConstantOperator.Cache.Clear();
+            EqOperator.Cache.Clear();
+            LtOperator.Cache.Clear();
 
-            return lastInteractResult;
+            ConstantOperator.Cache.Clear();
+            VarOperator.Cache.Clear();
         }
 
         public void Eval()
@@ -196,7 +206,7 @@ namespace app.Parser
                     //    return (new Pwr2Operator(), index);
 
                     case "t":
-                        token = new KComb();
+                        token = KComb.Acquire();
                         break;
 
                     //case "f":
@@ -220,7 +230,7 @@ namespace app.Parser
 
                     case "cons":
                     case "vec":
-                        token = new ConsOperator();
+                        token = ConsOperator.Acquire();
                         break;
 
                     case "car":
@@ -240,7 +250,7 @@ namespace app.Parser
                         break;
 
                     case "eq":
-                        token = new EqOperator();
+                        token = EqOperator.Acquire();
                         break;
 
                     case "if0":
@@ -248,7 +258,7 @@ namespace app.Parser
                         break;
 
                     case "lt":
-                        token = new LtOperator();
+                        token = LtOperator.Acquire();
                         break;
 
                     //case "mod":

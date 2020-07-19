@@ -22,7 +22,7 @@ namespace app.Encoder
                 {
                     state = ConsState.inlist;
                     sb.Append("(");
-                    cons.Value1.ToReadableList(sb, state);
+                    cons.x1.ToReadableList(sb, state);
                 }
             }
 

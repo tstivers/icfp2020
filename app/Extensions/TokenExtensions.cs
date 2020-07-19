@@ -20,12 +20,12 @@ namespace app.Extensions
 
         public static IToken Car(this IToken token)
         {
-            return token.AsCons().Value1;
+            return token.AsCons().x0;
         }
 
         public static IToken Cdr(this IToken token)
         {
-            return token.AsCons().Value2;
+            return token.AsCons().x1;
         }
 
         public static bool IsNil(this IToken token)

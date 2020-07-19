@@ -15,7 +15,7 @@
 
         public IToken Apply(IToken arg)
         {
-            return new KComb();
+            return KComb.Acquire();
         }
 
         public override string ToString()

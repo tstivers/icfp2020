@@ -2,29 +2,38 @@
 {
     public class FComb : IToken
     {
-        public IToken Value { get; }
+        private static FComb _empty = new FComb();
+        private static FComb _applied = new FComb(ConstantOperator.Acquire(0));
 
-        public FComb()
-        { }
+        public static FComb Acquire()
+        {
+            return _empty;
+        }
+
+        private IToken x0 { get; set; }
+
+        private FComb()
+        {
+        }
 
         private FComb(IToken value)
         {
-            Value = value;
+            x0 = value;
         }
 
-        public bool SkipLeft => Value != null;
+        public bool SkipLeft => x0 != null;
 
         public IToken Apply(IToken arg)
         {
-            if (Value == null)
-                return new FComb(arg);
+            if (x0 == null)
+                return _applied;
 
             return arg;
         }
 
         public override string ToString()
         {
-            return $"f [{Value}]";
+            return $"f [{x0}]";
         }
     }
 }

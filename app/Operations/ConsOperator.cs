@@ -1,44 +1,73 @@
 ﻿using app.Parser;
+using System;
+using System.Collections.Generic;
 
 namespace app.Operations
 {
     public class ConsOperator : IToken
     {
-        public IToken Value1 { get; }
-        public IToken Value2 { get; }
+        private static readonly ConsOperator Empty = new ConsOperator();
 
-        public ConsOperator()
-        { }
+        public static Dictionary<Tuple<IToken, IToken, IToken>, IToken> Cache = new Dictionary<Tuple<IToken, IToken, IToken>, IToken>();
 
-        private ConsOperator(IToken value1)
+        public IToken x0;
+        public IToken x1;
+
+        public static ConsOperator Acquire()
         {
-            Value1 = value1;
+            return Empty;
         }
 
-        public ConsOperator(IToken value1, IToken value2)
+        public static IToken Acquire(IToken arg0, IToken arg1, IToken arg2 = null)
         {
-            Value1 = AlienMessageParser.Reduce(value1);
-            Value2 = AlienMessageParser.Reduce(value2);
+            var key = Tuple.Create(arg0, arg1, arg2);
+            if (Cache.TryGetValue(key, out var cached))
+                return cached;
+
+            IToken x;
+            if (arg1 == null)
+            {
+                x = new ConsOperator(arg0, arg1);
+            }
+            else if (arg2 == null)
+            {
+                var a0 = AlienMessageParser.Reduce(arg0);
+                var a1 = AlienMessageParser.Reduce(arg1);
+                x = new ConsOperator(a0, a1);
+            }
+            else
+            {
+                x = ApOperator.Acquire(ApOperator.Acquire(arg2, arg0), arg1);
+            }
+
+            Cache[key] = x;
+            return x;
+        }
+
+        private ConsOperator()
+        {
+        }
+
+        private ConsOperator(IToken arg1, IToken arg2)
+        {
+            x0 = arg1;
+            x1 = arg2;
         }
 
         public IToken Apply(IToken arg)
         {
-            if (Value1 == null)
-                return new ConsOperator(arg);
+            if (x0 == null)
+                return Acquire(arg, null, null);
 
-            if (Value2 == null)
-                return new ConsOperator(Value1, arg);
+            if (x1 == null)
+                return Acquire(x0, arg, null);
 
-            //var x0 = AlienMessageParser.Reduce(Value1);
-            //var x1 = AlienMessageParser.Reduce(Value2);
-            //var x2 = AlienMessageParser.Reduce(arg);
-
-            return new ApOperator(new ApOperator(arg, Value1), Value2);
+            return Acquire(x0, x1, arg);
         }
 
         public override string ToString()
         {
-            return $"cons [{Value1}] [{Value2}]";
+            return $"cons [{x0}] [{x1}]";
         }
     }
 }

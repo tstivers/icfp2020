@@ -1,6 +1,5 @@
 ﻿using app.Extensions;
 using app.Parser;
-using System;
 using System.Diagnostics;
 
 namespace app.Operations
@@ -9,10 +8,6 @@ namespace app.Operations
     {
         public IToken Protocol { get; }
         public IToken State { get; }
-
-        public delegate Tuple<int, int> ProcessStepDelegate(IToken data);
-
-        public static ProcessStepDelegate ProcessStep;
 
         public InteractOperator()
         { }
@@ -45,11 +40,11 @@ namespace app.Operations
             Debug.Assert(flag == 0);
 
             var newState = p2.Cdr().Car();
-            var data = p2.AsCons().Value2.AsCons().Value2.AsCons();
+            var data = p2.Cdr().Cdr().AsCons();
 
             AlienMessageParser.lastInteractResult = data;
 
-            Debug.Assert(p2.AsCons().Value2.AsCons().Value2.AsCons().Value2 is NilOperator);
+            Debug.Assert(p2.Cdr().Cdr().Cdr() is NilOperator);
 
             return new InteractOperator(Protocol, newState);
         }

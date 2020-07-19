@@ -18,7 +18,7 @@ namespace app.Operations
         public IToken Apply(IToken arg)
         {
             var x0 = AlienMessageParser.Reduce(arg);
-            return (x0 as ConsOperator).Value2;
+            return (x0 as ConsOperator).x1;
         }
     }
 }

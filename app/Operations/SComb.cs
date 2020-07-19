@@ -1,4 +1,5 @@
-﻿using System;
+﻿using app.Parser;
+using System;
 using System.Collections.Generic;
 
 namespace app.Operations
@@ -30,7 +31,7 @@ namespace app.Operations
             }
             else
             {
-                x = new ApOperator(new ApOperator(arg0, arg2), new ApOperator(arg1, arg2));
+                x = AlienMessageParser.Reduce(ApOperator.Acquire(ApOperator.Acquire(arg0, arg2), ApOperator.Acquire(arg1, arg2)));
             }
 
             Cache[key] = x;

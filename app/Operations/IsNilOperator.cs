@@ -21,9 +21,9 @@ namespace app.Operations
             var x0 = AlienMessageParser.Reduce(arg);
 
             if (x0 is NilOperator)
-                return new KComb();
+                return KComb.Acquire();
             else if (x0 is ConsOperator)
-                return new FComb();
+                return FComb.Acquire();
             else
                 throw new InvalidOperationException();
         }

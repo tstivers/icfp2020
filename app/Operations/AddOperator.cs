@@ -1,50 +1,60 @@
 ﻿using app.Extensions;
 using app.Parser;
+using System;
 using System.Collections.Generic;
 
 namespace app.Operations
 {
     public class AddOperator : IToken
     {
-        private static AddOperator _empty = new AddOperator();
-        public static Dictionary<IToken, AddOperator> Cache = new Dictionary<IToken, AddOperator>();
+        private static readonly AddOperator Empty = new AddOperator();
+
+        public static Dictionary<Tuple<IToken, IToken>, IToken> Cache = new Dictionary<Tuple<IToken, IToken>, IToken>();
+
+        private IToken x0;
 
         public static AddOperator Acquire()
         {
-            return _empty;
+            return Empty;
         }
 
-        private static AddOperator Acquire(IToken arg1)
+        private static IToken Acquire(IToken arg0, IToken arg1)
         {
-            if (Cache.TryGetValue(arg1, out var cached))
+            var key = Tuple.Create(arg0, arg1);
+            if (Cache.TryGetValue(key, out var cached))
                 return cached;
 
-            var x = new AddOperator(arg1);
-            Cache[arg1] = x;
+            IToken x;
+            if (arg1 == null)
+            {
+                x = new AddOperator(arg0);
+            }
+            else
+            {
+                var x0 = AlienMessageParser.Reduce(arg0);
+                var x1 = AlienMessageParser.Reduce(arg1);
+                x = ConstantOperator.Acquire(x0.AsValue() + x1.AsValue());
+            }
 
+            Cache[key] = x;
             return x;
         }
-
-        private IToken x0 { get; set; }
 
         private AddOperator()
         {
         }
 
-        private AddOperator(IToken value)
+        private AddOperator(IToken arg1)
         {
-            x0 = value;
+            x0 = arg1;
         }
 
         public IToken Apply(IToken arg)
         {
             if (x0 == null)
-                return Acquire(arg);
+                return Acquire(arg, null);
 
-            x0 = AlienMessageParser.Reduce(x0);
-            var x1 = AlienMessageParser.Reduce(arg);
-
-            return ConstantOperator.Acquire(x0.AsValue() + x1.AsValue());
+            return Acquire(x0, arg);
         }
 
         public override string ToString()

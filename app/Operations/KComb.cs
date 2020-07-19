@@ -1,31 +1,52 @@
-﻿namespace app.Operations
+﻿using System.Collections.Generic;
+
+namespace app.Operations
 {
     public class KComb : IToken
     {
-        public IToken Value { get; }
+        private static KComb _empty = new KComb();
+        public static Dictionary<IToken, KComb> Cache = new Dictionary<IToken, KComb>();
 
-        public KComb()
+        public static KComb Acquire()
+        {
+            return _empty;
+        }
+
+        private static KComb Acquire(IToken arg1)
+        {
+            if (Cache.TryGetValue(arg1, out var cached))
+                return cached;
+
+            var x = new KComb(arg1);
+            Cache[arg1] = x;
+
+            return x;
+        }
+
+        private IToken x0 { get; set; }
+
+        private KComb()
         {
         }
 
-        public bool SkipRight => Value != null;
+        public bool SkipRight => x0 != null;
 
         private KComb(IToken value)
         {
-            Value = value;
+            x0 = value;
         }
 
         public IToken Apply(IToken arg)
         {
-            if (Value == null)
-                return new KComb(arg);
+            if (x0 == null)
+                return Acquire(arg);
 
-            return Value;
+            return x0;
         }
 
         public override string ToString()
         {
-            return $"t [{Value}]";
+            return $"t [{x0}]";
         }
     }
 }
