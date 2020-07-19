@@ -1,6 +1,5 @@
 ﻿using app.Operations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -69,11 +68,16 @@ namespace app.Parser
                 ParseLine(line);
             }
 
-            //foreach (var key in Variables.Keys.OrderBy(x => x).ToList())
-            //{
-            //    Console.WriteLine($"precompiling {key}");
-            //    Variables[key] = Reduce(Variables[key]);
-            //}
+            var t = new Thread(() =>
+            {
+                foreach (var key in Variables.Keys.OrderBy(x => x).ToList())
+                {
+                    Console.WriteLine($"precompiling {key}");
+                    Variables[key] = Reduce(Variables[key]);
+                }
+            }, 1024 * 1024 * 1024);
+            t.Start();
+            t.Join();
 
             var last = ParseTokens(_lines.Last().Skip(2).ToArray());
             interactToken = Reduce(last);
@@ -161,7 +165,7 @@ namespace app.Parser
 
         public IToken ParseTokens(string[] ops)
         {
-            var Stack = new Stack<ApOperator>();
+            var stack = new Stack<ApOperator>();
             IToken token = null;
 
             for (int i = 0; i < ops.Length; i++)
@@ -292,7 +296,7 @@ namespace app.Parser
                         break;
                 }
 
-                if (Stack.Count == 0)
+                if (stack.Count == 0)
                 {
                     if (!(token is ApOperator))
                     {
@@ -302,26 +306,26 @@ namespace app.Parser
                         return token;
                     }
 
-                    Stack.Push((ApOperator)token);
+                    stack.Push((ApOperator)token);
                 }
                 else
                 {
-                    var top = Stack.Peek();
+                    var top = stack.Peek();
                     if (top.f == null)
                     {
                         top.f = token;
                         if (token is ApOperator ap)
-                            Stack.Push(ap);
+                            stack.Push(ap);
                     }
                     else if (top.x == null)
                     {
                         top.x = token;
                         if (token is ApOperator ap)
-                            Stack.Push(ap);
+                            stack.Push(ap);
                         else
-                            while (Stack.Count > 0 && Stack.Peek().x != null)
+                            while (stack.Count > 0 && stack.Peek().x != null)
                             {
-                                token = Stack.Pop();
+                                token = stack.Pop();
                             }
                     }
                     else
@@ -329,8 +333,8 @@ namespace app.Parser
                 }
             }
 
-            if (Stack.Count == 1)
-                return Stack.Pop();
+            if (stack.Count == 1)
+                return stack.Pop();
 
             return token;
         }
