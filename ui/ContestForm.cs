@@ -7,6 +7,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
 namespace ui
@@ -18,7 +21,7 @@ namespace ui
         public List<Bitmap> PlayField { get; set; }
         public Rectangle Dimensions { get; set; }
 
-        public List<Color> Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
+        public List<Color> Colors = new List<Color>();
 
         private bool ShowGrid = false;
 
@@ -29,7 +32,28 @@ namespace ui
             Parser = new AlienMessageParser(message);
             Parser.Eval();
             PlayField = new List<Bitmap> { new Bitmap(1, 1) };
+            LoadColors();
             DisplayColorList();
+        }
+
+        public void LoadColors()
+        {
+            if ( File.Exists("./Colors.bin") )
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream("./Colors.bin", FileMode.Open, FileAccess.Read);
+                Colors = (List<Color>)formatter.Deserialize(stream);
+                stream.Close();
+            }
+            else Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
+        }
+
+        public void SaveColors()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream("./Colors.bin", FileMode.OpenOrCreate, FileAccess.Write);
+            formatter.Serialize(stream, Colors);
+            stream.Close();
         }
 
         public void DisplayColorList()
@@ -67,6 +91,7 @@ namespace ui
                 Colors[btn.ColorIdx] = ColorPicker.Color;
                 btn.SetColor(ColorPicker.Color);
                 pictureBox.Invalidate();
+                SaveColors();
 
             }
         }
