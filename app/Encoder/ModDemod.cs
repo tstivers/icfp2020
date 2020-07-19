@@ -5,7 +5,7 @@ namespace app.Encoder
 {
     public class ModDemod
     {
-        public string Bleh(string message)
+        public static string Bleh(string message)
         {
             if (message == null)
                 return null;
@@ -45,7 +45,7 @@ namespace app.Encoder
             return decoded.TrimEnd();
         }
 
-        public (int number, string remaining) NumberDecode(string bits)
+        public static (int number, string remaining) NumberDecode(string bits)
         {
             var width = bits.IndexOf('0');
             if (width == 0)

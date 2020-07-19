@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
 namespace ui
@@ -39,14 +38,14 @@ namespace ui
 
         public void LoadColors()
         {
-            if ( File.Exists("./Colors.bin") )
+            if (File.Exists("./Colors.bin"))
             {
                 IFormatter formatter = new BinaryFormatter();
                 Stream stream = new FileStream("./Colors.bin", FileMode.Open, FileAccess.Read);
                 Colors = (List<Color>)formatter.Deserialize(stream);
                 stream.Close();
             }
-            else Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown };
+            else Colors = new List<Color> { Color.Black, Color.SlateGray, Color.White, Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Brown, Color.Purple, Color.Teal };
         }
 
         public void SaveColors()
@@ -89,13 +88,12 @@ namespace ui
             ColorButton btn = (sender as ColorButton);
             ColorPicker.Color = btn.LayerColor;
             EditingColorIdx = btn.ColorIdx;
-            if ( ColorPicker.ShowDialog() != DialogResult.Cancel )
+            if (ColorPicker.ShowDialog() != DialogResult.Cancel)
             {
                 Colors[btn.ColorIdx] = ColorPicker.Color;
                 btn.SetColor(ColorPicker.Color);
                 pictureBox.Invalidate();
                 SaveColors();
-
             }
         }
 
@@ -110,7 +108,7 @@ namespace ui
 
         private void RedrawPlayfield(IToken result)
         {
-            var pics = result.Car();
+            var pics = result;
 
             List<List<Point>> pictures = new List<List<Point>>();
 
@@ -254,7 +252,7 @@ namespace ui
         }
     }
 
-    class ColorButton : Button
+    internal class ColorButton : Button
     {
         public int ColorIdx { get; set; }
         public Color LayerColor { get; set; }

@@ -45,9 +45,15 @@ namespace app.Operations
                 return s.Append("0").ToString();
             }
 
-            var number = Convert.ToString((int)Math.Abs(Value), 2);
+            var binary = Convert.ToString((long)Math.Abs(Value), 2);
+            var width = (int)Math.Ceiling((double)binary.Length / 4);
+            binary = binary.PadLeft(width * 4, '0');
 
-            throw new NotImplementedException();
+            s.Append(string.Empty.PadRight(width, '1'));
+            s.Append('0');
+            s.Append(binary);
+
+            return s.ToString();
         }
     }
 }

@@ -37,14 +37,13 @@ namespace app.Operations
             var p2 = AlienMessageParser.Reduce(p1.Apply(Vector));
 
             var flag = p2.Car().AsValue();
-            var newState = p2.Cdr().Car();
-            var data = p2.Cdr().Cdr().AsCons();
+            var newState = IToken.Dem(p2.Cdr().Car().Mod());
+            var data = p2.Cdr().Cdr().Car();
 
             if (flag != 0)
             {
                 var s = new SendOperator();
-                var v = s.Apply(data.Car());
-                AlienMessageParser.ClearCaches();
+                var v = s.Apply(data);
                 return new InteractOperator(Protocol, newState).Apply(v);
             }
 

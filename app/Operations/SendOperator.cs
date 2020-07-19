@@ -25,7 +25,7 @@ namespace app.Operations
 
             var responseString = response.Content.ReadAsStringAsync().Result;
 
-            return IToken.Parse(responseString).token;
+            return IToken.Dem(responseString);
         }
     }
 }

@@ -17,7 +17,12 @@ namespace app.Operations
         public bool SkipLeft => false;
         public bool SkipRight => false;
 
-        public static (IToken token, string remaining) Parse(string message)
+        public static IToken Dem(string message)
+        {
+            return Parse(message).token;
+        }
+
+        private static (IToken token, string remaining) Parse(string message)
         {
             var tag = message.Substring(0, 2);
             message = message.Substring(2);
@@ -47,7 +52,7 @@ namespace app.Operations
                     {
                         var length = width * 4;
 
-                        var num = Convert.ToInt32(message.Substring(width + 1, length), 2);
+                        var num = Convert.ToInt64(message.Substring(width + 1, length), 2);
                         i = tag == "01" ? ConstantOperator.Acquire(num) : ConstantOperator.Acquire(-num);
                         message = message.Substring(width + length + 1);
                     }
