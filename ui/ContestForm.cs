@@ -28,25 +28,28 @@ namespace ui
             Parser.Eval();
             PlayField = new List<Bitmap> { new Bitmap(1, 1) };
             DisplayColorList();
+            RedrawPlayfield(Parser.SkipToUniverse());
         }
 
         public void DisplayColorList()
         {
             pnlColors.Controls.Clear();
-            for(int idx = 0; idx < Colors.Count; idx++)
+            for (int idx = 0; idx < Colors.Count; idx++)
             {
                 string labelText;
-                switch (idx) {
+                switch (idx)
+                {
                     case 0:
                         labelText = "Background";
                         break;
+
                     case 1:
                         labelText = "Grid";
                         break;
+
                     default:
                         labelText = "Layer " + (idx - 1);
                         break;
-
                 }
                 var btnColorButton = new Button();
                 var pnlColorDisplay = new Panel();
@@ -206,7 +209,6 @@ namespace ui
         {
             ShowGrid = chkGrid.Checked;
             pictureBox.Invalidate();
-
         }
 
         private void btnCacheKill_Click(object sender, System.EventArgs e)

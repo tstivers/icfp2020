@@ -37,10 +37,12 @@ namespace app.Operations
             var p2 = AlienMessageParser.Reduce(p1.Apply(Vector));
 
             var flag = p2.Car().AsValue();
-            Debug.Assert(flag == 0);
-
             var newState = p2.Cdr().Car();
             var data = p2.Cdr().Cdr().AsCons();
+
+            if (flag == 0)
+            {
+            }
 
             AlienMessageParser.lastInteractResult = data;
 

@@ -26,6 +26,8 @@ namespace app.Parser
 
         public IToken Interact(int x, int y)
         {
+            System.Diagnostics.Trace.WriteLine($"Interact({x}, {y});");
+
             var t = new Thread(() =>
             {
                 interactToken = Reduce(ApOperator.Acquire(interactToken, ConsOperator.Acquire(ConstantOperator.Acquire(x), ConstantOperator.Acquire(y))));
@@ -37,6 +39,41 @@ namespace app.Parser
             GC.Collect();
             GC.WaitForPendingFinalizers();
             return lastInteractResult;
+        }
+
+        public IToken SkipToUniverse()
+        {
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(0, 0);
+
+            Interact(8, 4);
+
+            Interact(2, -8);
+
+            Interact(3, 6);
+
+            Interact(0, -14);
+
+            Interact(-4, 10);
+
+            Interact(9, -3);
+
+            Interact(-4, 10);
+
+            return Interact(1, 4);
         }
 
         public static void ClearCaches()
