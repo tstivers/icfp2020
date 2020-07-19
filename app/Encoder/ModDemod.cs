@@ -5,7 +5,7 @@ namespace app.Encoder
 {
     public class ModDemod
     {
-        public string Demod(string message)
+        public string Bleh(string message)
         {
             if (message == null)
                 return null;
@@ -58,14 +58,14 @@ namespace app.Encoder
             return (num, bits.Substring(width + length + 1));
         }
 
-        public static IToken Mod(IToken token)
+        public static string Mod(IToken token)
         {
-            return token;
+            return token.Mod();
         }
 
-        public static IToken Demod(IToken token)
+        public static IToken Demod(string message)
         {
-            return token;
+            throw new NotImplementedException();
         }
     }
 }

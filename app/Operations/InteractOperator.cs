@@ -7,7 +7,7 @@ namespace app.Operations
     public class InteractOperator : IToken
     {
         public IToken Protocol { get; }
-        public IToken State { get; }
+        public IToken State { get; private set; }
 
         public InteractOperator()
         { }
@@ -40,8 +40,12 @@ namespace app.Operations
             var newState = p2.Cdr().Car();
             var data = p2.Cdr().Cdr().AsCons();
 
-            if (flag == 0)
+            if (flag != 0)
             {
+                var s = new SendOperator();
+                var v = s.Apply(data.Car());
+                AlienMessageParser.ClearCaches();
+                return new InteractOperator(Protocol, newState).Apply(v);
             }
 
             AlienMessageParser.lastInteractResult = data;

@@ -65,6 +65,11 @@ namespace app.Operations
             return Acquire(x0, x1, arg);
         }
 
+        public string Mod()
+        {
+            return "11" + x0.Mod() + x1.Mod();
+        }
+
         public override string ToString()
         {
             return $"cons [{x0}] [{x1}]";

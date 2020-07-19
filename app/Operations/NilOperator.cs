@@ -22,5 +22,10 @@
         {
             return "nil";
         }
+
+        public string Mod()
+        {
+            return "00";
+        }
     }
 }

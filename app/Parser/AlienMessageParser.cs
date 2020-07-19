@@ -44,35 +44,20 @@ namespace app.Parser
         public IToken SkipToUniverse()
         {
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(0, 0);
-
             Interact(8, 4);
-
             Interact(2, -8);
-
             Interact(3, 6);
-
             Interact(0, -14);
-
             Interact(-4, 10);
-
             Interact(9, -3);
-
             Interact(-4, 10);
-
             return Interact(1, 4);
         }
 

@@ -1,5 +1,4 @@
-﻿using app.Encoder;
-using app.Parser;
+﻿using app.Parser;
 
 namespace app.Operations
 {
@@ -9,7 +8,7 @@ namespace app.Operations
         {
             var x0 = AlienMessageParser.Reduce(arg);
 
-            return ModDemod.Mod(x0);
+            return arg;
         }
 
         public override string ToString()
